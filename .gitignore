@@ -5,6 +5,13 @@
 /.pnp
 .pnp.js
 
+#IDE
+.idea
+modules.xml
+Project_Default.xml
+sandbox.iml
+vcs.xml
+
 # testing
 /coverage
 

@@ -1,15 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { ProtectedRoute } from './components';
+import { Auth0Provider } from '@auth0/auth0-react';
+import { LoginPage, MainPage, SignUpPage } from './pages';
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <ProtectedRoute><MainPage /></ProtectedRoute>,
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
+  {
+    path: '/signup',
+    element: <SignUpPage />,
+  },
+]);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <Auth0Provider domain="" clientId="">
+      <RouterProvider router={router} />
+    </Auth0Provider>
   </React.StrictMode>,
 );
 

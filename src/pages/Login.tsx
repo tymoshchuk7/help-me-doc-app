@@ -14,7 +14,7 @@ const Login = (): ReactElement => {
 
   return (
     <div>
-      <Row gutter={[16, 16]} justify="center" align="middle" style={{ minHeight: '100vh' }}>
+      <Row gutter={[16, 16]} justify="center" align="middle" className="min-page-height">
         <Col span={9}>
           <Input placeholder="email" value={email} onChange={({ target }) => setEmail(target.value)} />
           <Input

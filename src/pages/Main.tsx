@@ -1,11 +1,12 @@
 import React, { ReactElement } from 'react';
+import { PageLayout } from '../components';
 
 const Main = (): ReactElement => {
 
   return (
-    <div>
-      Main
-    </div>
+    <PageLayout>
+      Participants
+    </PageLayout>
   );
 };
 

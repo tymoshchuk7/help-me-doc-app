@@ -7,8 +7,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 .block {
   display: block;
+}
+
+.min-page-height {
+  min-height: 100vh;
+}
+
+.white-text {
+  color: #fff;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 
 .mt-2 {

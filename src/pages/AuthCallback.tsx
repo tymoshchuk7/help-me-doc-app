@@ -1,16 +1,17 @@
 import React, { ReactElement, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts';
+import { useDispatch } from 'react-redux';
+import { updateToken } from '../redux/appReducer';
 
 const AuthCallback = (): ReactElement => {
-  const { updateToken } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   useEffect(() => {
     const url = new URL(window.location.href);
     const token = url.hash.slice(14);
     if (token) {
-      updateToken(token);
+      dispatch(updateToken(token));
       return navigate('/');
     }
     return navigate('/login');

@@ -1,18 +1,18 @@
 import React, {
   ReactElement, ReactNode, useEffect,
 } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts';
 
 const Main = ({ children }: { children: ReactNode }): ReactElement => {
-  const { isAuthenticated } = useAuth0();
+  const { token } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
+    if (!token) {
       navigate('/login');
     }
-  }, [isAuthenticated, navigate]);
+  }, [token, navigate]);
 
   return (
     <div>

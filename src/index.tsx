@@ -4,13 +4,17 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { ProtectedRoute } from './components';
-import { Auth0Provider } from '@auth0/auth0-react';
-import { LoginPage, MainPage, SignUpPage } from './pages';
+import { LoginPage, MainPage, SignUpPage, AuthCallback } from './pages';
+import { AuthControllerProvider } from './contexts';
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <ProtectedRoute><MainPage /></ProtectedRoute>,
+  },
+  {
+    path: '/authCallback',
+    element: <AuthCallback />,
   },
   {
     path: '/login',
@@ -26,11 +30,9 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement,
 );
 root.render(
-  <React.StrictMode>
-    <Auth0Provider domain="" clientId="">
-      <RouterProvider router={router} />
-    </Auth0Provider>
-  </React.StrictMode>,
+  <AuthControllerProvider>
+    <RouterProvider router={router} />
+  </AuthControllerProvider>,
 );
 
 // If you want to start measuring performance in your app, pass a function

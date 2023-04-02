@@ -2,12 +2,15 @@ import {
   createContext, useContext, ReactNode,
   useCallback,
 } from 'react';
+import { useDispatch } from 'react-redux';
 import { WebAuth } from 'auth0-js';
+import { updateToken } from '../redux/appReducer';
 import { IUser } from '../types';
 
 interface IAuthController {
   onSignUp: (dto: IUser) => Promise<unknown>,
-  onLogin: (dto: IUser) => Promise<unknown>
+  onLogin: (dto: IUser) => Promise<unknown>,
+  onLogOut: () => void,
 }
 
 const auth0 = new WebAuth({
@@ -23,6 +26,7 @@ const AuthControllerContext = createContext<IAuthController>({} as IAuthControll
 export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 
 export const AuthControllerProvider = ({ children }: { children: ReactNode }) => {
+  const dispatch = useDispatch();
 
   const onSignUp = useCallback( ({ email, password }: IUser) => {
     return new Promise((resolve, reject) => {
@@ -53,11 +57,17 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }) =>
     });
   }, []);
 
+  const onLogOut = useCallback(() => {
+    auth0.logout({ returnTo: 'http://localhost:3000/' });
+    dispatch(updateToken(null));
+  }, [dispatch]);
+
   return (
     <AuthControllerContext.Provider
       value={{
         onSignUp,
         onLogin,
+        onLogOut,
       }}
     >
       {children}

@@ -13,7 +13,7 @@ export const appSlice = createSlice({
   name: 'app',
   initialState,
   reducers: {
-    updateToken: (state, action: PayloadAction<string>) => {
+    updateToken: (state, action: PayloadAction<string | null>) => {
       if (action.payload) {
         window.localStorage.setItem('token', action.payload);
       } else {

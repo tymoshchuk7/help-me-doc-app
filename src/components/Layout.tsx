@@ -2,6 +2,7 @@ import React, { ReactElement, ReactNode } from 'react';
 import { NotificationOutlined, UserOutlined, MessageOutlined } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Layout, Menu, theme } from 'antd';
+import { useAuth } from '../contexts';
 
 const { Header, Content, Sider } = Layout;
 
@@ -24,6 +25,7 @@ const sidebarItems: MenuProps['items'] = [UserOutlined, MessageOutlined, Notific
 );
 
 const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
+  const { onLogOut } = useAuth();
   const { token: { colorBgContainer } } = theme.useToken();
 
   return (
@@ -32,6 +34,7 @@ const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
         <div
           className="white-text cursor-pointer"
           style={{ fontSize: 16 }}
+          onClick={onLogOut}
         >
           Log out
         </div>

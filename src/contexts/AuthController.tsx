@@ -9,7 +9,7 @@ import { IUser } from '../types';
 
 interface IAuthController {
   onSignUp: (dto: IUser) => Promise<unknown>,
-  onLogin: (dto: IUser) => Promise<unknown>,
+  onLogin: (dto: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
   onLogOut: () => void,
 }
 
@@ -28,11 +28,15 @@ export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 export const AuthControllerProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useDispatch();
 
-  const onSignUp = useCallback( ({ email, password }: IUser) => {
+  const onSignUp = useCallback( ({ email, password, first_name, last_name }: IUser) => {
     return new Promise((resolve, reject) => {
       auth0.signup({
         email,
         password,
+        userMetadata: {
+          first_name,
+          last_name,
+        },
         connection: 'Username-Password-Authentication',
       }, (error, result) => {
         if (error) {
@@ -43,7 +47,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }) =>
     });
   }, []);
 
-  const onLogin = useCallback(({ email, password }: IUser) => {
+  const onLogin = useCallback(({ email, password }: Pick<IUser, 'email' | 'password'>) => {
     return new Promise((resolve, reject) => {
       auth0.login({
         email,

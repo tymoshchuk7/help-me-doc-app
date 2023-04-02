@@ -11,11 +11,13 @@ const SignUp = (): ReactElement => {
   const [form] = Form.useForm();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [, setError] = useState<null | unknown>(null);
 
   const onSubmit = async () => {
     try {
-      await onSignUp({ email, password });
+      await onSignUp({ email, password, first_name: firstName, last_name: lastName });
       navigate('/login');
     } catch (e) {
       setError(e);
@@ -29,8 +31,21 @@ const SignUp = (): ReactElement => {
           <Form onFinish={onSubmit} form={form}>
             <Input placeholder="email" value={email} onChange={({ target }) => setEmail(target.value)} />
             <Input
+              className="mt-2"
+              placeholder="first name"
+              value={firstName}
+              onChange={({ target }) => setFirstName(target.value)}
+            />
+            <Input
+              className="mt-2"
+              placeholder="last name"
+              value={lastName}
+              onChange={({ target }) => setLastName(target.value)}
+            />
+            <Input
               placeholder="password"
-              type="password" className="mt-2"
+              type="password"
+              className="mt-2"
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />

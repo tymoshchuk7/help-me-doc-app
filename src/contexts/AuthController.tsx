@@ -11,6 +11,7 @@ interface IAuthController {
   onSignUp: (dto: IUser) => Promise<unknown>,
   onLogin: (dto: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
   onLogOut: () => void,
+  onGoogleSignIn: () => void,
 }
 
 const auth0 = new WebAuth({
@@ -66,12 +67,15 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }) =>
     dispatch(updateToken(null));
   }, [dispatch]);
 
+  const onGoogleSignIn = () => auth0.authorize({ connection: 'google-oauth2' });
+
   return (
     <AuthControllerContext.Provider
       value={{
         onSignUp,
         onLogin,
         onLogOut,
+        onGoogleSignIn,
       }}
     >
       {children}

@@ -1,12 +1,13 @@
 import React, { ReactElement, useState } from 'react';
-import { Input, Row, Col, Button, Form } from 'antd';
-import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { Input, Row, Col, Button, Form, Divider } from 'antd';
+import { Link } from 'react-router-dom';
+import GoogleButton from 'react-google-button';
 import { useAuth } from '../contexts';
 
 //TODO add validation
 const SignUp = (): ReactElement => {
-  const { onSignUp } = useAuth();
+  const { onSignUp, onGoogleSignIn } = useAuth();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [email, setEmail] = useState('');
@@ -28,6 +29,8 @@ const SignUp = (): ReactElement => {
     <div>
       <Row gutter={[16, 16]} justify="center" align="middle" className="min-page-height">
         <Col span={9}>
+          <GoogleButton onClick={onGoogleSignIn} />
+          <Divider />
           <Form onFinish={onSubmit} form={form}>
             <Input placeholder="email" value={email} onChange={({ target }) => setEmail(target.value)} />
             <Input

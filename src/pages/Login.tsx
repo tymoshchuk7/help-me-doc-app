@@ -1,10 +1,11 @@
 import React, { ReactElement, useState } from 'react';
-import { Input, Row, Col, Button, Form } from 'antd';
+import { Input, Row, Col, Button, Form, Divider } from 'antd';
+import GoogleButton from 'react-google-button';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts';
 
 const Login = (): ReactElement => {
-  const { onLogin } = useAuth();
+  const { onLogin, onGoogleSignIn } = useAuth();
   const [form] = Form.useForm();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,11 +23,14 @@ const Login = (): ReactElement => {
     <div>
       <Row gutter={[16, 16]} justify="center" align="middle" className="min-page-height">
         <Col span={9}>
+          <GoogleButton onClick={onGoogleSignIn} />
+          <Divider />
           <Form onFinish={onSubmit} form={form}>
             <Input placeholder="email" value={email} onChange={({ target }) => setEmail(target.value)} />
             <Input
               placeholder="password"
-              type="password" className="mt-2"
+              type="password"
+              className="mt-2"
               value={password}
               onChange={({ target }) => setPassword(target.value)}
             />

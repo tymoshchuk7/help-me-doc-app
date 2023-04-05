@@ -29,7 +29,7 @@ export const appSlice = createSlice({
       } else {
         window.sessionStorage.removeItem('workspaceToBeCreated');
       }
-      return { ...state, token: action.payload };
+      return { ...state, preserveWorkspaceToBeCreated: action.payload };
     },
   },
 });

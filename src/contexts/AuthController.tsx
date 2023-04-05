@@ -1,10 +1,10 @@
 import {
   createContext, useContext, ReactNode,
-  useCallback,
+  useCallback, ReactElement,
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { WebAuth } from 'auth0-js';
-import { updateToken } from '../redux/appReducer';
+import { updateToken, preserveWorkspaceCreate } from '../redux/appReducer';
 import { IUser } from '../types';
 
 interface IAuthController {
@@ -26,7 +26,7 @@ const AuthControllerContext = createContext<IAuthController>({} as IAuthControll
 
 export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 
-export const AuthControllerProvider = ({ children }: { children: ReactNode }) => {
+export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const dispatch = useDispatch();
 
   const onSignUp = useCallback( ({ email, password, first_name, last_name }: IUser) => {
@@ -43,10 +43,11 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }) =>
         if (error) {
           return reject(error);
         }
+        dispatch(preserveWorkspaceCreate(email));
         return resolve(result);
       });
     });
-  }, []);
+  }, [dispatch]);
 
   const onLogin = useCallback(({ email, password }: Pick<IUser, 'email' | 'password'>) => {
     return new Promise((resolve, reject) => {

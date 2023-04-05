@@ -3,10 +3,12 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface AppState {
   token: string | null,
+  preserveWorkspaceToBeCreated: string | null,
 }
 
 const initialState: AppState = {
   token: window.localStorage.getItem('token') ?? null,
+  preserveWorkspaceToBeCreated: window.sessionStorage.getItem('workspaceToBeCreated') ?? null,
 };
 
 export const appSlice = createSlice({
@@ -21,10 +23,17 @@ export const appSlice = createSlice({
       }
       return { ...state, token: action.payload };
     },
+    preserveWorkspaceCreate: (state, action: PayloadAction<string | null>) => {
+      if (action.payload) {
+        window.sessionStorage.setItem('workspaceToBeCreated', action.payload);
+      } else {
+        window.sessionStorage.removeItem('workspaceToBeCreated');
+      }
+      return { ...state, token: action.payload };
+    },
   },
 });
 
-// Action creators are generated for each case reducer function
-export const { updateToken } = appSlice.actions;
+export const { updateToken, preserveWorkspaceCreate } = appSlice.actions;
 
 export default appSlice.reducer;

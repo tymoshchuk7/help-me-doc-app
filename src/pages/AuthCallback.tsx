@@ -1,13 +1,19 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateToken } from '../redux/appReducer';
+import { useAsyncEffect } from '../hooks';
+import { RootState } from '../store';
 
 const AuthCallback = (): ReactElement => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const preservedWorkspaceCreate = useSelector(({ app }: RootState) => app.preserveWorkspaceToBeCreated);
 
-  useEffect(() => {
+  useAsyncEffect(() => {
+    if (preservedWorkspaceCreate) {
+      //TODO add action to create workspace
+    }
     const url = new URL(window.location.href);
     const token = url.hash.slice(14);
     if (token) {

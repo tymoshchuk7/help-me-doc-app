@@ -4,7 +4,7 @@ import {
 } from 'react';
 import { useDispatch } from 'react-redux';
 import { WebAuth } from 'auth0-js';
-import { updateToken, preserveWorkspaceCreate } from '../redux/appReducer';
+import { updateToken, preserveTenantCreate } from '../redux/appReducer';
 import { IUser } from '../types';
 
 interface IAuthController {
@@ -18,8 +18,8 @@ const auth0 = new WebAuth({
   domain: process.env.REACT_APP_AUTH0_DOMAIN,
   clientID: process.env.REACT_APP_AUTH0_CLIENT_ID,
   redirectUri: 'http://localhost:3000/authCallback',
-  responseType: 'token',
-  scope: 'profile email token',
+  responseType: 'token id_token',
+  scope: 'openid email profile',
 });
 
 const AuthControllerContext = createContext<IAuthController>({} as IAuthController);
@@ -43,7 +43,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
         if (error) {
           return reject(error);
         }
-        dispatch(preserveWorkspaceCreate(email));
+        dispatch(preserveTenantCreate(email));
         return resolve(result);
       });
     });

@@ -5,9 +5,13 @@ export interface UserState {
   user: Record<string, string>,
 }
 
+interface Response {
+  user: Record<string, string>
+}
+
 export const getUser = createAsyncThunk('user/get', async () => {
   const idToken = window.localStorage.getItem('token') as string;
-  const { data } = await axios.get(`${process.env.REACT_APP_API_URL}/users/`, { headers: {
+  const { data } = await axios.get<Response>(`${process.env.REACT_APP_API_URL}/users/`, { headers: {
     Authorization: `Bearer ${idToken}`,
   } });
   return data;

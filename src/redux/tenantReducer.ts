@@ -11,7 +11,7 @@ interface Response {
 
 export const createTenant = createAsyncThunk('tenant/create', async () => {
   const idToken = window.localStorage.getItem('token') as string;
-  const { data } = await axios.post<Response>(`${process.env.REACT_APP_API_URL}/tenants/`, { headers: {
+  const { data } = await axios.post<Response>(`${process.env.REACT_APP_API_URL}/tenants/`,  {}, { headers: {
     Authorization: `Bearer ${idToken}`,
   } });
   return data;

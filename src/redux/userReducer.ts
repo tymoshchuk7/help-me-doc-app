@@ -1,12 +1,9 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-
-export interface UserState {
-  user: Record<string, string>,
-}
+import { User } from '../types';
 
 interface Response {
-  user: Record<string, string>
+  user: User
 }
 
 export const getUser = createAsyncThunk('user/get', async () => {
@@ -14,12 +11,10 @@ export const getUser = createAsyncThunk('user/get', async () => {
   const { data } = await axios.get<Response>(`${process.env.REACT_APP_API_URL}/users/`, { headers: {
     Authorization: `Bearer ${idToken}`,
   } });
-  return data;
+  return data.user;
 });
 
-const initialState: UserState = {
-  user: {},
-};
+const initialState: User = {} as User;
 
 export const userSlice = createSlice({
   name: 'user',

@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Space, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { updateToken, preserveTenantCreate } from '../redux/appReducer';
-import { getUser } from '../redux/userReducer';
 import { createTenant } from '../redux/tenantReducer';
 import { useAsyncEffect } from '../hooks';
 import { RootState, AppDispatch } from '../store';
@@ -36,7 +35,6 @@ const AuthCallback = (): ReactElement => {
     }
     if (idToken) {
       dispatch(updateToken(idToken));
-      await dispatch(getUser());
       if (preserveTenantToBeCreated) {
         try {
           await dispatch(createTenant());

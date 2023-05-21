@@ -5,11 +5,11 @@ import {
 import { useDispatch } from 'react-redux';
 import { WebAuth } from 'auth0-js';
 import { updateToken, preserveTenantCreate } from '../redux/appReducer';
-import { IUser } from '../types';
+import { User } from '../types';
 
 interface IAuthController {
-  onSignUp: (dto: IUser) => Promise<unknown>,
-  onLogin: (dto: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
+  onSignUp: (dto: Omit<User, 'id' | 'avatar'>) => Promise<unknown>,
+  onLogin: (dto: Pick<User, 'email' | 'password'>) => Promise<unknown>,
   onLogOut: () => void,
   onGoogleSignIn: () => void,
 }
@@ -29,7 +29,7 @@ export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const dispatch = useDispatch();
 
-  const onSignUp = useCallback( ({ email, password, first_name, last_name }: IUser) => {
+  const onSignUp = useCallback( ({ email, password, first_name, last_name }: Omit<User, 'id' | 'avatar'>) => {
     return new Promise((resolve, reject) => {
       auth0.signup({
         email,
@@ -49,7 +49,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
     });
   }, [dispatch]);
 
-  const onLogin = useCallback(({ email, password }: Pick<IUser, 'email' | 'password'>) => {
+  const onLogin = useCallback(({ email, password }: Pick<User, 'email' | 'password'>) => {
     return new Promise((resolve, reject) => {
       auth0.login({
         email,

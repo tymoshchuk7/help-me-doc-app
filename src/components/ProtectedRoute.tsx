@@ -4,7 +4,7 @@ import React, {
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsyncEffect } from '../hooks';
-import { getUser } from '../redux/userReducer';
+import { getMe } from '../redux/userReducer';
 import { AppDispatch, RootState } from '../store';
 import { Loader } from '../components';
 
@@ -19,7 +19,7 @@ const Main = ({ children }: { children: ReactNode }): ReactElement => {
       return navigate('/login');
     }
     setIsLoading(true);
-    await dispatch(getUser());
+    await dispatch(getMe());
     setIsLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

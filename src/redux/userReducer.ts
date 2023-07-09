@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { apiRequest } from '../helpers';
 import { User } from '../types';
+import { RootState } from '../store';
 
 interface Response {
   user: User
 }
 
-export const getUser = createAsyncThunk('user/get', async () => {
-  const idToken = window.localStorage.getItem('token') as string;
-  const { data } = await axios.get<Response>(`${process.env.REACT_APP_API_URL}/users/`, { headers: {
-    Authorization: `Bearer ${idToken}`,
-  } });
+export const getMe = createAsyncThunk('user/get', async (_, thunk) => {
+  const { app: { token } } = thunk.getState() as RootState;
+  const { data } = await apiRequest<Response>({ path: '/users/', authToken: token });
   return data.user;
 });
 
@@ -21,8 +20,8 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getUser.fulfilled, (state, action) => {
-      return { ...state, ...action.payload };
+    builder.addCase(getMe.fulfilled, (state, action) => {
+      return action.payload;
     });
   },
 });

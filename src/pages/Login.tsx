@@ -1,5 +1,9 @@
 import React, { ReactElement, useState } from 'react';
-import { Input, Row, Col, Button, Form, Divider } from 'antd';
+import { Auth0Error } from 'auth0-js';
+import {
+  Input, Row, Col, Button,
+  Form, Divider, Alert,
+} from 'antd';
 import GoogleButton from 'react-google-button';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../contexts';
@@ -9,13 +13,13 @@ const Login = (): ReactElement => {
   const [form] = Form.useForm();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [, setError] = useState<null | unknown>(null);
+  const [error, setError] = useState<null | Auth0Error>(null);
 
   const onSubmit = async () => {
     try {
       await onLogin({ email, password });
     } catch (e) {
-      setError(e);
+      setError(e as Auth0Error);
     }
   };
 
@@ -37,6 +41,7 @@ const Login = (): ReactElement => {
             <div className="mt-2">
               Don't have an account? <Link to="/signup">Signup</Link>
             </div>
+            {error ? <Alert description={error.description} type="error" className="mt-2" /> : <div />}
             <Button className="mt-2" htmlType="submit">Login</Button>
           </Form>
         </Col>

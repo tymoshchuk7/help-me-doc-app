@@ -29,7 +29,9 @@ export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const dispatch = useDispatch();
 
-  const onSignUp = useCallback( ({ email, password, first_name, last_name }: Omit<User, 'id' | 'avatar'>) => {
+  const onSignUp = useCallback( ({
+    email, password, first_name, last_name, role,
+  }: Omit<User, 'id' | 'avatar'>) => {
     return new Promise((resolve, reject) => {
       auth0.signup({
         email,
@@ -37,6 +39,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
         userMetadata: {
           first_name,
           last_name,
+          role,
         },
         connection: 'Username-Password-Authentication',
       }, (error, result) => {

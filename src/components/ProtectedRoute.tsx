@@ -1,14 +1,12 @@
-import React, {
-  ReactElement, ReactNode, useState,
-} from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { ReactElement, useState } from 'react';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAsyncEffect } from '../hooks';
 import { getMe } from '../redux/userReducer';
 import { AppDispatch, RootState } from '../store';
 import { Loader } from '../components';
 
-const Main = ({ children }: { children: ReactNode }): ReactElement => {
+const Main = (): ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const appState = useSelector(({ app }: RootState) => app);
   const navigate = useNavigate();
@@ -28,7 +26,7 @@ const Main = ({ children }: { children: ReactNode }): ReactElement => {
     <div className="min-page-height display-flex align-center justify-center">
       <Loader />
     </div>
-  ) : <>{children}</>;
+  ) : <Outlet />;
 };
 
 export default Main;

@@ -2,24 +2,34 @@ import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 import { ProtectedRoute } from './components';
 import {
-  AuthCallback, LoginPage, MainPage, SignUpPage,
+  AuthCallbackPage, LoginPage, MainPage, SignUpPage,
+  InvitationCallbackPage,
 } from './pages';
 
 export const router = createBrowserRouter([
   {
-    path: '/',
-    element: <ProtectedRoute><MainPage /></ProtectedRoute>,
+    element: <ProtectedRoute />,
+    children: [
+      {
+        path: '/',
+        Component: MainPage,
+      },
+    ],
   },
   {
     path: '/authCallback',
-    element: <AuthCallback />,
+    Component: AuthCallbackPage,
   },
   {
     path: '/login',
-    element: <LoginPage />,
+    Component: LoginPage,
   },
   {
     path: '/signup',
-    element: <SignUpPage />,
+    Component: SignUpPage,
+  },
+  {
+    path: '/invitation/:id',
+    Component: InvitationCallbackPage,
   },
 ]);

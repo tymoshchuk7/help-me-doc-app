@@ -1,3 +1,5 @@
+import { TRole } from './permissions';
+
 export interface User {
   id: string,
   email: string,
@@ -5,5 +7,18 @@ export interface User {
   first_name: string,
   last_name: string,
   avatar: string;
-  role: string;
+}
+
+export interface Invitation {
+  id: string,
+  tenant: string,
+  email: string,
+  role: TRole,
+}
+
+export interface TenantParticipant {
+  id: string,
+  user_id: string,
+  status: string,
+  role: TRole,
 }

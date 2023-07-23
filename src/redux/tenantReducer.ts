@@ -8,7 +8,11 @@ interface Response {
 
 export const createTenant = createAsyncThunk('tenant/create', async (_, thunk) => {
   const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({ path: '/tenants/', authToken: token });
+  const { data } = await apiRequest<Response>({
+    path: '/tenants/',
+    authToken: token,
+    method: 'post',
+  });
   return data.tenant;
 });
 

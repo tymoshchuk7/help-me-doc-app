@@ -27,7 +27,6 @@ const SignUp = (): ReactElement => {
         password,
         first_name: firstName,
         last_name: lastName,
-        role: 'chief',
       });
       navigate('/login');
     } catch (e) {

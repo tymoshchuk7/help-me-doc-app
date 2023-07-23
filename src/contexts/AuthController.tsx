@@ -2,10 +2,11 @@ import {
   createContext, useContext, ReactNode,
   useCallback, ReactElement,
 } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { WebAuth } from 'auth0-js';
 import { updateToken, preserveTenantCreate } from '../redux/appReducer';
 import { User } from '../types';
+import { RootState } from '../store';
 
 interface IAuthController {
   onSignUp: (dto: Omit<User, 'id' | 'avatar'>) => Promise<unknown>,
@@ -28,6 +29,7 @@ export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 
 export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const dispatch = useDispatch();
+  const invitation = useSelector(({ invitations }: RootState) => invitations.preserveAcceptInvitation);
 
   const onSignUp = useCallback( ({
     email, password, first_name, last_name,
@@ -45,11 +47,13 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
         if (error) {
           return reject(error);
         }
-        dispatch(preserveTenantCreate(email));
+        if (!invitation) {
+          dispatch(preserveTenantCreate(email));
+        }
         return resolve(result);
       });
     });
-  }, [dispatch]);
+  }, [dispatch, invitation]);
 
   const onLogin = useCallback(({ email, password }: Pick<User, 'email' | 'password'>) => {
     return new Promise((resolve, reject) => {

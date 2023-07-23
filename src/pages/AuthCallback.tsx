@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Space, Alert } from 'antd';
 import { Link } from 'react-router-dom';
 import { updateToken, preserveTenantCreate } from '../redux/appReducer';
+import { acceptInvitation } from '../redux/invitationsReducer';
 import { createTenant } from '../redux/tenantReducer';
 import { useAsyncEffect } from '../hooks';
 import { RootState, AppDispatch } from '../store';
@@ -13,7 +14,6 @@ import { Loader } from '../components';
 interface AuthCallbackData {
   id_token: string,
   access_token: string,
-
   error: string,
   errorDescription: string,
 }
@@ -25,6 +25,8 @@ const AuthCallback = (): ReactElement => {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
   const preserveTenantToBeCreated = useSelector(({ app }: RootState) => app.preserveTenantToBeCreated);
+  const acceptInvitationId = useSelector(({ invitations }: RootState) => invitations.preserveAcceptInvitation);
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,6 +45,9 @@ const AuthCallback = (): ReactElement => {
           setLoading(false);
           return setError((e as string).toString());
         }
+      }
+      if (acceptInvitationId) {
+        await dispatch(acceptInvitation(acceptInvitationId));
       }
       setLoading(false);
       return navigate('/');

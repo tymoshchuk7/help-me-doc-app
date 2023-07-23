@@ -1,11 +1,19 @@
 import React, { ReactElement } from 'react';
-import { PageLayout } from '../components';
+import { useSelector } from 'react-redux';
+import { useHasPermissions } from '../hooks';
+import { RootState }  from '../store';
+import { Permissions } from '../types/permissions';
+import { PageLayout, InviteParticipant } from '../components';
 
 const Main = (): ReactElement => {
+  const { first_name } = useSelector(({ user }: RootState) => user);
+
+  const canInvite = useHasPermissions([Permissions.CAN_INVITE_USERS]);
 
   return (
     <PageLayout>
-      Participants
+      <div>Hello, { first_name }!</div>
+      {canInvite && <InviteParticipant />}
     </PageLayout>
   );
 };

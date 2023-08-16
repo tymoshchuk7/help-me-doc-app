@@ -7,7 +7,7 @@ import { RootState } from  '../../store';
 
 const Header = (): ReactElement => {
   const { onLogOut } = useAuth();
-  const { avatar, last_name: lastName, first_name: firstName } = useSelector(({ user }: RootState) => user);
+  const { avatar, last_name: lastName, first_name: firstName } = useSelector(({ user }: RootState) => user.me);
   const [open, setOpen] = useState(false);
 
   const togglePopover = () => setOpen((prev) => !prev);

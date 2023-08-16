@@ -3,8 +3,8 @@ import { RootState } from '../store';
 import { ROLE_PERMISSIONS, Permissions } from '../types/permissions';
 
 export default function useHasPermissions(permissions: Array<Permissions>): boolean {
-  const currentUser = useSelector(({ user }: RootState) => user);
-  const participants = useSelector(({ participants: _participants }: RootState) => _participants);
+  const currentUser = useSelector(({ user }: RootState) => user.me);
+  const participants = useSelector(({ participants: _participants }: RootState) => _participants.data);
   if (!currentUser) {
     return false;
   }

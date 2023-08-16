@@ -2,14 +2,20 @@ import { createSlice } from '@reduxjs/toolkit';
 import { TenantParticipant } from '../types';
 // import { RootState } from '../store';
 
-const initialState: Record<string, TenantParticipant> = {};
+interface State {
+  data: Record<string, TenantParticipant>
+}
+
+const initialState: State = {
+  data: {},
+};
 
 export const participantsSlice = createSlice({
   name: 'participants',
   initialState,
   reducers: {
     setParticipants: (state, action) => {
-      return { ...state, ...action.payload };
+      return { data: { ...state.data, ...action.payload } };
     },
   },
 });

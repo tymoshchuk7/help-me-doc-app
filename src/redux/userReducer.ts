@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { apiRequest } from '../helpers';
+import { createAsyncAction } from '../helpers';
 import { User, TenantParticipant } from '../types';
-import { RootState } from '../store';
 import { setParticipants } from './participantsReducer';
 
 interface State {
@@ -14,12 +13,16 @@ interface Response {
   participants: Record<string, TenantParticipant>
 }
 
-export const getMe = createAsyncThunk('user/get', async (_, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({ path: '/users/', authToken: token });
-  thunk.dispatch(setParticipants(data.participants));
-  return data;
-});
+export const getMe = createAsyncThunk(
+  'user/get',
+  (_, thunk) => createAsyncAction<Response>({
+    thunk,
+    path: '/users',
+    onSuccess: (data) => {
+      thunk.dispatch(setParticipants(data.participants));
+    },
+  }),
+);
 
 const initialState: State = {
   me: {} as User,

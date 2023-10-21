@@ -1,20 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { apiRequest } from '../helpers';
-import { RootState } from '../store';
+import { createAsyncAction } from '../helpers';
 
 interface Response {
   tenant: Record<string, string>
 }
 
-export const createTenant = createAsyncThunk('tenant/create', async (_, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({
+export const createTenant = createAsyncThunk(
+  'tenant/create',
+  async (_, thunk) => createAsyncAction<Response>({
+    thunk,
     path: '/tenants/',
-    authToken: token,
     method: 'post',
-  });
-  return data.tenant;
-});
+  }),
+);
 
 const initialState: Record<string, string> = {};
 
@@ -24,7 +22,7 @@ export const tenantSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(createTenant.fulfilled, (state, action) => {
-      return action.payload;
+      return action.payload.tenant;
     });
   },
 });

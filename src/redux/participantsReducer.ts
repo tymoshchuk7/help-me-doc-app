@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { TenantParticipant } from '../types';
-// import { RootState } from '../store';
 
 interface State {
   data: Record<string, TenantParticipant>

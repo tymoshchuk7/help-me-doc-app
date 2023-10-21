@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { apiRequest } from '../helpers';
+import { createAsyncAction } from '../helpers';
 import { setParticipants } from './participantsReducer';
 import { Invitation, TenantParticipant } from '../types';
-import { RootState } from '../store';
 
 interface GetResponse {
   invitation: Invitation
@@ -22,34 +21,34 @@ interface State {
   data: Record<string, Invitation>
 }
 
-export const loadInvitation = createAsyncThunk('invitation/get', async (id: string) => {
-  const { data } = await apiRequest<GetResponse>({ path: `/invitations/${id}` });
-  return data.invitation;
-});
+export const loadInvitation = createAsyncThunk(
+  'invitation/get',
+  (id: string, thunk) => createAsyncAction<GetResponse>({
+    thunk,
+    path: `/invitations/${id}`,
+  }),
+);
 
 export const createInvitation = createAsyncThunk(
   'invitation/post',
-  async (body: { email: string, role: string }, thunk) => {
-    const { app: { token } } = thunk.getState() as RootState;
-    const { data } = await apiRequest<PostResponse>({
-      path: '/invitations',
-      method: 'post',
-      body,
-      authToken: token,
-    });
-    return data.invitations;
-  },
+  (body: { email: string, role: string }, thunk) => createAsyncAction<PostResponse>({
+    thunk,
+    path: '/invitations/',
+    method: 'post',
+    body,
+  }),
 );
 
-export const acceptInvitation = createAsyncThunk('invitation/accept', async (id: string, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<AcceptResponse>({
+export const acceptInvitation = createAsyncThunk(
+  'invitation/accept',
+  (id: string, thunk) => createAsyncAction<AcceptResponse>({
+    thunk,
     path: `/invitations/${id}/accept`,
-    authToken: token,
-  });
-  thunk.dispatch(setParticipants(data.participants));
-  return data;
-});
+    onSuccess: (data) => {
+      thunk.dispatch(setParticipants(data));
+    },
+  }),
+);
 
 const initialState: State = {
   invitation: null,
@@ -72,10 +71,10 @@ export const invitationSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(loadInvitation.fulfilled, (state, action) => {
-      return { ...state, invitation: action.payload };
+      return { ...state, invitation: action.payload.invitation };
     });
     builder.addCase(createInvitation.fulfilled, (state, action) => {
-      return { ...state, data: { ...state.data, ...action.payload } };
+      return { ...state, data: { ...state.data, ...action.payload.invitations } };
     });
     builder.addCase(acceptInvitation.fulfilled, (state) => {
       return { ...state, invitation: null, preserveAcceptInvitation: null };

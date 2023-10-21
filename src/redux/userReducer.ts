@@ -17,7 +17,7 @@ export const getMe = createAsyncThunk(
   'user/get',
   (_, thunk) => createAsyncAction<Response>({
     thunk,
-    path: '/users',
+    path: '/users/',
     onSuccess: (data) => {
       thunk.dispatch(setParticipants(data.participants));
     },

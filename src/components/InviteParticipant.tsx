@@ -19,12 +19,13 @@ const App: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch<AppDispatch>();
 
-  const onFinish = (values: { email: string, role: string }) => {
-    return dispatch(createInvitation(values));
-  };
-
   const onReset = () => {
     form.resetFields();
+  };
+
+  const onFinish = async (values: { email: string, role: string }) => {
+    await dispatch(createInvitation(values));
+    onReset();
   };
 
   return (

@@ -3,7 +3,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { ProtectedRoute } from './components';
 import {
   AuthCallbackPage, LoginPage, MainPage, SignUpPage,
-  InvitationCallbackPage,
+  InvitationCallbackPage, ChatsPage,
 } from './pages';
 
 export const router = createBrowserRouter([
@@ -13,6 +13,10 @@ export const router = createBrowserRouter([
       {
         path: '/',
         Component: MainPage,
+      },
+      {
+        path: '/chats',
+        Component: ChatsPage,
       },
     ],
   },

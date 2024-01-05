@@ -24,7 +24,7 @@ export interface TenantParticipant {
 }
 
 export interface TenantChat {
-  chat_id: string,
+  id: string,
   me: string,
   otherParticipant: string,
 }

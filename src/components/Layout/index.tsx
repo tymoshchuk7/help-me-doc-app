@@ -1,12 +1,17 @@
-import React, { ReactElement, ReactNode } from 'react';
+import React, {
+  ReactElement, ReactNode, useState,
+} from 'react';
 import { NotificationOutlined, MessageOutlined, ContactsOutlined } from '@ant-design/icons';
 import { Layout, Menu, theme } from 'antd';
 import Header from './Header';
 import SidebarItem from './SidebarItem';
+import FAB from '../FAB';
+import CreateChatModal from './CreateChatModal';
 
 const { Content, Sider } = Layout;
 
 const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
+  const [createChatModalVisibility, setCreateChatModalVisibility] = useState(false);
   const { token: { colorBgContainer } } = theme.useToken();
 
   return (
@@ -21,8 +26,8 @@ const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
             style={{ height: '100%', borderRight: 0 }}
           >
             <SidebarItem title="Dashboard" icon={<ContactsOutlined />} to="/" />
-            <SidebarItem title="Messages" icon={<MessageOutlined />} to="/messages" />
-            <SidebarItem title="Notifications" icon={<NotificationOutlined />} to="/notifications" />
+            <SidebarItem title="Messages" icon={<MessageOutlined />} to="/chats" />
+            <SidebarItem title="Notifications" icon={<NotificationOutlined />} to="/" />
           </Menu>
         </Sider>
         <Layout style={{ padding: 24 }}>
@@ -38,6 +43,11 @@ const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
           </Content>
         </Layout>
       </Layout>
+      <FAB onOpenCrateChatModal={() => setCreateChatModalVisibility(true)} />
+      <CreateChatModal
+        open={createChatModalVisibility}
+        onHideModal={() => setCreateChatModalVisibility(false)}
+      />
     </Layout>
   );
 };

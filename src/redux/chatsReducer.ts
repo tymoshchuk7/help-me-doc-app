@@ -1,34 +1,48 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { apiRequest } from '../helpers';
-import { RootState } from '../store';
+import { createAsyncAction } from '../helpers';
+import { TenantParticipant, User, TenantChat } from '../types';
+import { setUsers } from './userReducer';
+import { setParticipants } from './participantsReducer';
 
-interface Response {
-  chats: Record<string, object>
+interface GetResponse {
+  chats: Record<string, TenantChat>,
+  participants: Record<string, TenantParticipant>,
+  users: Record<string, User>,
 }
 
-export const loadChats = createAsyncThunk('chats/get', async (_, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({ path: '/chats/', authToken: token });
-  return data;
-});
+const endpoint = '/chats/';
 
-export const createChat = createAsyncThunk('chats/post', async (_, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({
-    path: '/chats/',
-    authToken: token,
+export const loadChats = createAsyncThunk(
+  'chats/load',
+  (_, thunk) => createAsyncAction<GetResponse>({
+    thunk,
+    path: endpoint,
+    onSuccess: (data) => {
+      thunk.dispatch(setUsers(data.users));
+      thunk.dispatch(setParticipants(data.participants));
+    },
+  }),
+);
+
+export const createChat = createAsyncThunk(
+  'chats/create',
+  (body: { participantRecipientId: string }, thunk) => createAsyncAction({
+    thunk,
+    path: endpoint,
     method: 'post',
-  });
-  return data;
-});
+    body,
+  }),
+);
 
-export const retrieveChat = createAsyncThunk('chats/retrieve', async (id: string, thunk) => {
-  const { app: { token } } = thunk.getState() as RootState;
-  const { data } = await apiRequest<Response>({ path: `/chats/${id}`, authToken: token });
-  return data;
-});
+export const retrieveChat = createAsyncThunk(
+  'chats/retrieve',
+  (id: string, thunk) => createAsyncAction<Response>({
+    thunk,
+    path: `${endpoint}${id}`,
+  }),
+);
 
-const initialState: { data: Record<string, object> } = {
+const initialState: { data: Record<string, TenantChat> } = {
   data: {},
 };
 
@@ -40,8 +54,8 @@ export const chatsSlice = createSlice({
     builder.addCase(loadChats.fulfilled, (state, action) => {
       return { data: { ...state.data, ...action.payload.chats } };
     });
-    builder.addCase(createChat.fulfilled, (state, action) => {
-      return { data: { ...state.data, ...action.payload.chats } };
+    builder.addCase(createChat.fulfilled, (state) => {
+      return state;
     });
   },
 });

@@ -4,6 +4,7 @@ import tenantReducer from './redux/tenantReducer';
 import userReducer from './redux/userReducer';
 import invitationsReducer from './redux/invitationsReducer';
 import participantsReducer from './redux/participantsReducer';
+import chatsReducer from './redux/chatsReducer';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     user: userReducer,
     invitations: invitationsReducer,
     participants: participantsReducer,
+    chats: chatsReducer,
   },
 });
 

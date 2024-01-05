@@ -22,3 +22,9 @@ export interface TenantParticipant {
   status: string,
   role: TRole,
 }
+
+export interface TenantChat {
+  chat_id: string,
+  me: string,
+  otherParticipant: string,
+}

@@ -11,6 +11,7 @@ interface State {
 interface Response {
   user: User,
   participants: Record<string, TenantParticipant>
+  users: Record<string, User>
 }
 
 export const getMe = createAsyncThunk(
@@ -32,14 +33,18 @@ const initialState: State = {
 export const userSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setUsers: (state, action) => {
+      return { ...state, data: { ...state.data, ...action.payload } };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(getMe.fulfilled, (state, action) => {
-      return { ...state, me: action.payload.user };
+      return { ...state, me: action.payload.user, data: action.payload.users };
     });
   },
 });
 
-export const {} = userSlice.actions;
+export const { setUsers } = userSlice.actions;
 
 export default userSlice.reducer;

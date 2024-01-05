@@ -24,11 +24,11 @@ interface Params<Response, Body> {
   body?: Body,
   onSuccess?: (data: Response) => void,
   onFail?: (error: AxiosError) => void,
-  valueOnReject?: Response,
+  valueOnReject?: unknown,
 }
 //TODO research thunk typings
 export default async function createAsyncAction<Response, Body = {}>({
-  path, method, onSuccess, onFail, valueOnReject, thunk, body,
+  path, method, onSuccess, onFail, valueOnReject = {}, thunk, body,
 }: Params<Response, Body>): Promise<Response> {
   const { app: { token } } = thunk.getState() as RootState;
   try {

@@ -45,7 +45,7 @@ export default async function createAsyncAction<Response, Body = {}>({
     onFail?.(error);
     if (error.response?.status === 401) {
       thunk.dispatch(updateToken(null));
-      window.location.pathname = getUnauthorizedUrl();
+      window.location.href = getUnauthorizedUrl();
     }
     //@ts-ignore
     return thunk.rejectWithValue(valueOnReject);

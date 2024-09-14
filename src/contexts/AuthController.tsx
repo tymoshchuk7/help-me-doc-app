@@ -11,6 +11,7 @@ interface IAuthController {
   onLogin: (user: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
   onLogOut: () => void,
   onGoogleSignIn: () => void,
+  onChangePassword: (email: string) => Promise<void>,
   isAuthorized: boolean,
   updateToken: (token: string | null) => void,
 }
@@ -27,6 +28,11 @@ const AuthControllerContext = createContext<IAuthController>({} as IAuthControll
 
 export const useAuth = (): IAuthController => useContext(AuthControllerContext);
 
+enum AuthConnections {
+  USERNAME_PASSWORD_AUTH = 'Username-Password-Authentication',
+  GOOGLE_AUTH = 'google-oauth2',
+}
+
 export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
   const [token, setToken] = useState<string | null>(null);
 
@@ -42,7 +48,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
         first_name,
         last_name,
       },
-      connection: 'Username-Password-Authentication',
+      connection: AuthConnections.USERNAME_PASSWORD_AUTH,
     }, (error, result) => {
       if (error) {
         return reject(error);
@@ -68,7 +74,19 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
     updateToken(null);
   }, [updateToken]);
 
-  const onGoogleSignIn = () => auth0.authorize({ connection: 'google-oauth2' });
+  const onChangePassword = useCallback((email: string) => new Promise((resolve, reject) => {
+    auth0.changePassword({
+      connection: AuthConnections.USERNAME_PASSWORD_AUTH,
+      email,
+    }, (error, result) => {
+      if (error) {
+        return reject(error);
+      }
+      return resolve(result);
+    });
+  }), []);
+
+  const onGoogleSignIn = () => auth0.authorize({ connection: AuthConnections.GOOGLE_AUTH });
 
   return (
     <AuthControllerContext.Provider
@@ -77,6 +95,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
         onSignUp,
         onLogin,
         onLogOut,
+        onChangePassword,
         onGoogleSignIn,
         updateToken,
       }}

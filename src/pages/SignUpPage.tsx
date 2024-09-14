@@ -60,7 +60,7 @@ const SignUpPage = (): ReactElement => {
           rules={userValidator.password}
           hideValue
         />
-        <div className="mt-2">
+        <div>
           Already have an account?
           {' '}
           <Link to="/login">Login</Link>

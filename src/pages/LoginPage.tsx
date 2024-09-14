@@ -40,12 +40,15 @@ const LoginPage = (): ReactElement => {
           rules={userValidator.password}
           hideValue
         />
-        <div className="mt-2">
+        <div>
           Don&apos;t have an account?
           {' '}
           <Link to="/signup">Signup</Link>
         </div>
-        <Button style={{ marginTop: 20 }} className="mt-2" htmlType="submit">Login</Button>
+        <div>
+          <Link to="/change-password">Forget password</Link>
+        </div>
+        <Button style={{ marginTop: 20 }} htmlType="submit">Login</Button>
       </Form>
     </AuthPageLayout>
   );

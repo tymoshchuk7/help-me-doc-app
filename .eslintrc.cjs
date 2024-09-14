@@ -22,5 +22,10 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    'import/prefer-default-export': 'off',
+    'react/function-component-definition': 'off',
+    'react/require-default-props': 'off',
+    'object-curly-newline': 'off',
+    'react/jsx-no-useless-fragment': 'off',
   },
 }

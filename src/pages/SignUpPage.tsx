@@ -1,14 +1,15 @@
 import React, { ReactElement, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Auth0Error } from 'auth0-js';
-import { Button, Form, FormProps } from 'antd';
+import { Button, Divider, Form, FormProps } from 'antd';
+import GoogleButton from 'react-google-button';
 import { IUser } from '../types';
 import { AuthPageLayout, Input } from '../components';
 import { userValidator } from '../validators';
 import { useAuth } from '../contexts';
 
 const SignUpPage = (): ReactElement => {
-  const { onSignUp } = useAuth();
+  const { onSignUp, onGoogleSignIn } = useAuth();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const [error, setError] = useState<null | Auth0Error>(null);
@@ -31,6 +32,8 @@ const SignUpPage = (): ReactElement => {
 
   return (
     <AuthPageLayout errorMessage={error?.description || null}>
+      <GoogleButton onClick={onGoogleSignIn} style={{ width: '100%' }} />
+      <Divider>OR</Divider>
       <Form onFinish={onSubmit} form={form} layout="vertical">
         <Input
           name="email"

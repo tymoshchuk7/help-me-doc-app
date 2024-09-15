@@ -12,14 +12,17 @@ const LoginPage = (): ReactElement => {
   const { onLogin, onGoogleSignIn } = useAuth();
   const [form] = Form.useForm();
   const [error, setError] = useState<null | Auth0Error>(null);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit: FormProps<IUser>['onFinish'] = async (values) => {
     const { email, password } = values;
     try {
+      setLoading(true);
       await onLogin({ email, password });
     } catch (e) {
       setError(e as Auth0Error);
     }
+    setLoading(false);
   };
 
   return (
@@ -48,7 +51,14 @@ const LoginPage = (): ReactElement => {
         <div>
           <Link to="/change-password">Forget password</Link>
         </div>
-        <Button style={{ marginTop: 20 }} htmlType="submit">Login</Button>
+        <Button
+          loading={loading}
+          disabled={loading}
+          style={{ marginTop: 20 }}
+          htmlType="submit"
+        >
+          Login
+        </Button>
       </Form>
     </AuthPageLayout>
   );

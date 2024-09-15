@@ -13,14 +13,17 @@ const ChangePasswordPage = (): ReactElement => {
   const { onChangePassword } = useAuth();
   const [form] = Form.useForm();
   const [error, setError] = useState<null | Auth0Error>(null);
+  const [loading, setLoading] = useState(false);
 
   const onSubmit: FormProps<IUser>['onFinish'] = async (values) => {
     const { email } = values;
     try {
+      setLoading(true);
       await onChangePassword(email);
     } catch (e) {
       setError(e as Auth0Error);
     }
+    setLoading(false);
   };
 
   return (
@@ -42,7 +45,14 @@ const ChangePasswordPage = (): ReactElement => {
           {' '}
           page
         </div>
-        <Button style={{ marginTop: 20 }} htmlType="submit">Submit</Button>
+        <Button
+          loading={loading}
+          disabled={loading}
+          style={{ marginTop: 20 }}
+          htmlType="submit"
+        >
+          Submit
+        </Button>
       </Form>
     </AuthPageLayout>
   );

@@ -33,10 +33,21 @@ enum AuthConnections {
   GOOGLE_AUTH = 'google-oauth2',
 }
 
-export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
-  const [token, setToken] = useState<string | null>(null);
+const authTokenKey = 'authToken';
 
-  const updateToken = useCallback((newToken: string | null) => setToken(newToken), []);
+export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
+  const [token, setToken] = useState<string | null>(
+    window.localStorage.getItem(authTokenKey) || null,
+  );
+
+  const updateToken = useCallback((newToken: string | null) => {
+    setToken(newToken);
+    if (newToken) {
+      window.localStorage.setItem(authTokenKey, newToken);
+    } else {
+      window.localStorage.removeItem(authTokenKey);
+    }
+  }, []);
 
   const onSignUp = useCallback(({
     email, password, first_name, last_name,

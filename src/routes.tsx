@@ -1,9 +1,18 @@
-import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import React, { ReactElement } from 'react';
+import {
+  createBrowserRouter, Navigate, Outlet,
+} from 'react-router-dom';
+import { useAuth } from './contexts';
 import {
   LoginPage, SignUpPage, AuthCallbackPage,
-  ChangePasswordPage,
+  ChangePasswordPage, DashboardPage,
 } from './pages';
+
+const PrivateRoute = (): ReactElement => {
+  const { isAuthorized } = useAuth();
+
+  return isAuthorized ? <Outlet /> : <Navigate to="/login" />;
+};
 
 export const router = createBrowserRouter([
   {
@@ -23,7 +32,12 @@ export const router = createBrowserRouter([
     Component: ChangePasswordPage,
   },
   {
-    path: '/',
-    element: <div>App</div>,
+    element: <PrivateRoute />,
+    children: [
+      {
+        path: '/',
+        Component: DashboardPage,
+      },
+    ],
   },
 ]);

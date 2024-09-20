@@ -4,6 +4,8 @@ import React, {
   useCallback, ReactElement, useState,
 } from 'react';
 import { WebAuth } from 'auth0-js';
+import { AUTH_TOKEN_KEY } from '../constants';
+import { useAppStore } from '../stores';
 import { IUser } from '../types';
 
 interface IAuthController {
@@ -33,21 +35,16 @@ enum AuthConnections {
   GOOGLE_AUTH = 'google-oauth2',
 }
 
-const authTokenKey = 'authToken';
-
 export const AuthControllerProvider = ({ children }: { children: ReactNode }): ReactElement => {
+  const { setAuthToken } = useAppStore();
   const [token, setToken] = useState<string | null>(
-    window.localStorage.getItem(authTokenKey) || null,
+    window.localStorage.getItem(AUTH_TOKEN_KEY) || null,
   );
 
   const updateToken = useCallback((newToken: string | null) => {
     setToken(newToken);
-    if (newToken) {
-      window.localStorage.setItem(authTokenKey, newToken);
-    } else {
-      window.localStorage.removeItem(authTokenKey);
-    }
-  }, []);
+    setAuthToken(newToken);
+  }, [setAuthToken]);
 
   const onSignUp = useCallback(({
     email, password, first_name, last_name,

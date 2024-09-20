@@ -1,15 +1,35 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import {
   createBrowserRouter, Navigate, Outlet,
 } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 import { useAuth } from './contexts';
+import { useAsyncEffect } from './hooks';
+import { useUserStore } from './stores';
 import {
   LoginPage, SignUpPage, AuthCallbackPage,
   ChangePasswordPage, DashboardPage,
 } from './pages';
+import { Loader } from './components';
 
 const PrivateRoute = (): ReactElement => {
   const { isAuthorized } = useAuth();
+  const { me, getMe } = useUserStore();
+  const [onLoading, setOnLoading] = useState(true);
+
+  useAsyncEffect(async () => {
+    if (isEmpty(me)) {
+      try {
+        const user = await getMe();
+        console.log(user);
+      } catch {}
+    }
+    setOnLoading(false);
+  }, []);
+
+  if (onLoading) {
+    return <Loader />;
+  }
 
   return isAuthorized ? <Outlet /> : <Navigate to="/login" />;
 };

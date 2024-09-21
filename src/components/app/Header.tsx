@@ -2,9 +2,11 @@ import React, { ReactElement, useState } from 'react';
 import { Layout, Popover, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../contexts';
+import { useUserStore } from '../../stores';
 
 const Header = (): ReactElement => {
   const { onLogOut } = useAuth();
+  const { me } = useUserStore();
   const [open, setOpen] = useState(false);
 
   const togglePopover = () => setOpen((prev) => !prev);
@@ -18,12 +20,12 @@ const Header = (): ReactElement => {
             <div onKeyDown={() => {}} onClick={onLogOut} className="cursor-pointer">Log out</div>
           </div>
         )}
-        title="User"
+        title={`${me?.first_name} ${me?.last_name}`}
         trigger="click"
         open={open}
         onOpenChange={togglePopover}
       >
-        <Avatar icon={<UserOutlined />} />
+        <Avatar className="cursor-pointer" src={me?.avatar} icon={!me?.avatar ? <UserOutlined /> : null} />
       </Popover>
     </Layout.Header>
   );

@@ -2,7 +2,6 @@ import React, { ReactElement, useState } from 'react';
 import {
   createBrowserRouter, Navigate, Outlet,
 } from 'react-router-dom';
-import { isEmpty } from 'lodash';
 import { useAuth } from './contexts';
 import { useAsyncEffect } from './hooks';
 import { useUserStore } from './stores';
@@ -18,11 +17,8 @@ const PrivateRoute = (): ReactElement => {
   const [onLoading, setOnLoading] = useState(true);
 
   useAsyncEffect(async () => {
-    if (isEmpty(me)) {
-      try {
-        const user = await getMe();
-        console.log(user);
-      } catch {}
+    if (isAuthorized && !me) {
+      await getMe();
     }
     setOnLoading(false);
   }, []);

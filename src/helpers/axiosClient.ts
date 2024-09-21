@@ -7,7 +7,7 @@ interface Params<B> {
   body?: B
 }
 
-export default function apiRequest<R, B = any>({
+export default function axiosClient<R, B = any>({
   path, method = 'get', authToken, body,
 }: Params<B>): Promise<AxiosResponse<R>> {
   const baseUrl = import.meta.env.VITE_API_URL;

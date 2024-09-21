@@ -1,20 +1,20 @@
 import { create } from 'zustand';
-import useAppStore from './appStore';
-import { apiRequest } from '../helpers';
+import { apiRequest } from './apiRequest';
+import { IUser, APIResult } from '../types';
 
-const useUserStore = create((set) => ({
-  me: {},
-  getMe: async () => {
-    const { token } = useAppStore.getState();
-    const { data } = await apiRequest({
-      path: '/users/',
-      authToken: token,
-      method: 'get',
-    });
+interface UserState {
+  me: IUser | null,
+  getMe: () => Promise<APIResult<IUser>>,
+}
 
-    set({ data });
-    return data;
-  },
+const usersEndpoint = '/users';
+
+const useUserStore = create<UserState>((set) => ({
+  me: null,
+  getMe: async () => apiRequest<{ user: IUser }>({
+    path: `${usersEndpoint}/me`,
+    onSuccess: (data) => set({ me: data.user }),
+  }),
 }));
 
 export default useUserStore;

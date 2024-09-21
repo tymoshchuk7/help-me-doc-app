@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx",
     "check-types": "tsc --noemit",
-    "test": "npm run lint && npm run check-types",
+    "find-circular-deps": "npx madge --extensions ts,tsx --ts-config tsconfig.json --circular src/",
+    "test": "npm run lint && npm run check-types && npm run find-circular-deps",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -39,6 +40,7 @@
     "eslint-plugin-jsx-a11y": "^6.9.0",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.7",
+    "madge": "^8.0.0",
     "typescript": "^5.2.2",
     "vite": "^5.3.1",
     "vite-plugin-eslint": "^1.8.1"

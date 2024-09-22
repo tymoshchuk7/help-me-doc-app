@@ -3,6 +3,7 @@ import qs from 'qs';
 import { useNavigate, Link } from 'react-router-dom';
 import { Space, Alert } from 'antd';
 import { useAuth } from '../contexts';
+import { AppRouteNames } from '../constants';
 
 interface AuthCallbackData {
   id_token: string,
@@ -20,7 +21,7 @@ const AuthCallback = (): ReactElement => {
 
   useEffect(() => {
     updateToken(idToken);
-    navigate('/');
+    navigate(AppRouteNames.dashboard);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

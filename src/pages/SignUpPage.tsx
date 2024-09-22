@@ -3,10 +3,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Auth0Error } from 'auth0-js';
 import { Button, Divider, Form, FormProps } from 'antd';
 import GoogleButton from 'react-google-button';
-import { IUser } from '../types';
-import { AuthPageLayout, Input } from '../components';
-import { userValidator } from '../validators';
 import { useAuth } from '../contexts';
+import { userValidator } from '../validators';
+import { IUser } from '../types';
+import { AppRouteNames } from '../constants';
+import { AuthPageLayout, Input } from '../components';
 
 const SignUpPage = (): ReactElement => {
   const { onSignUp, onGoogleSignIn } = useAuth();
@@ -26,7 +27,7 @@ const SignUpPage = (): ReactElement => {
         first_name,
         last_name,
       });
-      navigate('/login');
+      navigate(AppRouteNames.login);
     } catch (e) {
       setError(e as Auth0Error);
     }

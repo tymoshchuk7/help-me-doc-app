@@ -5,9 +5,10 @@ import {
 import { useAuth } from './contexts';
 import { useAsyncEffect } from './hooks';
 import { useUserStore } from './stores';
+import { AppRouteNames } from './constants';
 import {
-  LoginPage, SignUpPage, AuthCallbackPage,
-  ChangePasswordPage, DashboardPage,
+  AuthCallbackPage, ChangePasswordPage, DashboardPage,
+  LoginPage, SignUpPage,
 } from './pages';
 import { Loader } from './components';
 
@@ -32,26 +33,26 @@ const PrivateRoute = (): ReactElement => {
 
 export const router = createBrowserRouter([
   {
-    path: '/authCallback',
+    path: AppRouteNames.authCallback,
     Component: AuthCallbackPage,
   },
   {
-    path: '/login',
+    path: AppRouteNames.login,
     Component: LoginPage,
   },
   {
-    path: '/signup',
+    path: AppRouteNames.signup,
     Component: SignUpPage,
   },
   {
-    path: '/change-password',
+    path: AppRouteNames.changePassword,
     Component: ChangePasswordPage,
   },
   {
     element: <PrivateRoute />,
     children: [
       {
-        path: '/',
+        path: AppRouteNames.dashboard,
         Component: DashboardPage,
       },
     ],

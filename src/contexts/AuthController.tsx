@@ -48,7 +48,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
 
   const onSignUp = useCallback(({
     email, password, first_name, last_name,
-  }: object) => new Promise((resolve, reject) => {
+  }: IAuthController['onSignUp']) => new Promise((resolve, reject) => {
     auth0.signup({
       email,
       password,
@@ -65,7 +65,9 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
     });
   }), []);
 
-  const onLogin = useCallback(({ email, password }: object) => new Promise((resolve, reject) => {
+  const onLogin = useCallback(({
+    email, password,
+  }: IAuthController['onLogin']) => new Promise((resolve, reject) => {
     auth0.login({
       email,
       password,

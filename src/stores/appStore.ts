@@ -1,7 +1,12 @@
 import { create } from 'zustand';
 import { AUTH_TOKEN_KEY } from '../constants';
 
-const useAppStore = create((set) => ({
+interface AppState {
+  token: string | null,
+  setAuthToken: (token: string | null) => void,
+}
+
+const useAppStore = create<AppState>((set) => ({
   token: window.localStorage.getItem(AUTH_TOKEN_KEY) || null,
   setAuthToken: (token: string | null) => {
     if (token) {

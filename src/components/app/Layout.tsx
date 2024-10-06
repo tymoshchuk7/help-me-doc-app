@@ -1,4 +1,4 @@
-import React, { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode } from 'react';
 import { Layout } from 'antd';
 import Header from './Header';
 import Sidebar from './Sidebar';

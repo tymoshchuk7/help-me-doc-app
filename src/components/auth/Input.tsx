@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { NamePath } from 'antd/lib/form/interface';
 import { Rule } from 'antd/lib/form';
 import { Form, Input } from 'antd';

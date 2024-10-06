@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Auth0Error } from 'auth0-js';
 import {
   Button, Form, FormProps, Typography,

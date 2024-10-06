@@ -27,5 +27,6 @@ module.exports = {
     'react/require-default-props': 'off',
     'object-curly-newline': 'off',
     'react/jsx-no-useless-fragment': 'off',
+    'react/react-in-jsx-scope': 'off',
   },
 }

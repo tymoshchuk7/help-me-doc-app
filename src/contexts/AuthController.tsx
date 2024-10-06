@@ -13,7 +13,7 @@ interface IAuthController {
   onLogin: (user: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
   onLogOut: () => void,
   onGoogleSignIn: () => void,
-  onChangePassword: (email: string) => Promise<void>,
+  onChangePassword: (email: string) => Promise<unknown>,
   isAuthorized: boolean,
   updateToken: (token: string | null) => void,
 }
@@ -46,9 +46,9 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
     setAuthToken(newToken);
   }, [setAuthToken]);
 
-  const onSignUp = useCallback(({
+  const onSignUp: IAuthController['onSignUp'] = useCallback(({
     email, password, first_name, last_name,
-  }: IAuthController['onSignUp']) => new Promise((resolve, reject) => {
+  }: Pick<IUser, 'email' | 'password' | 'last_name' | 'first_name'>) => new Promise((resolve, reject) => {
     auth0.signup({
       email,
       password,
@@ -67,7 +67,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
 
   const onLogin = useCallback(({
     email, password,
-  }: IAuthController['onLogin']) => new Promise((resolve, reject) => {
+  }: Pick<IUser, 'email' | 'password'>) => new Promise((resolve, reject) => {
     auth0.login({
       email,
       password,

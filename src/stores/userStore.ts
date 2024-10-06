@@ -4,7 +4,7 @@ import { IUser, APIResult } from '../types';
 
 interface UserState {
   me: IUser | null,
-  getMe: () => Promise<APIResult<IUser>>,
+  getMe: () => Promise<APIResult<{ user: IUser }>>,
 }
 
 const usersEndpoint = '/users';

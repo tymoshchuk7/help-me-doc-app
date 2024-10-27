@@ -6,4 +6,5 @@ export enum AppRouteNames {
   signup = '/signup',
   changePassword = '/change-password',
   dashboard = '/',
+  createTenant = '/create-tenant',
 }

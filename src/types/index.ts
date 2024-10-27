@@ -10,6 +10,10 @@ export interface IUser {
   default_tenant: string,
 }
 
+export interface ITenant {
+  name: string,
+}
+
 export interface APIResult<R> {
   hasError: boolean,
   data?: R,

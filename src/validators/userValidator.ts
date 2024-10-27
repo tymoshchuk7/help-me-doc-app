@@ -7,21 +7,21 @@ export const userValidator: Record<ValidatorKey, Rule[]> = {
   email: [{ required: true, type: 'email', message: 'Please enter your email address.' }],
   first_name: [{
     required: true,
-    message: 'Please enter your password',
+    message: 'Please enter your password.',
   }, {
     max: 150,
     message: 'First name must be max 150 characters long.',
   }],
   last_name: [{
     required: true,
-    message: 'Please enter your password',
+    message: 'Please enter your password.',
   }, {
     max: 150,
     message: 'Last name must be max 150 characters long.',
   }],
   password: [{
     required: true,
-    message: 'Please enter your password',
+    message: 'Please enter your password.',
   }, {
     min: 6,
     message: 'Password must be at least 6 characters long.',

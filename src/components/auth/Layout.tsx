@@ -3,7 +3,7 @@ import { Alert, Flex } from 'antd';
 
 interface Props {
   children: ReactNode,
-  errorMessage: string | null,
+  errorMessage: string | null | undefined,
 }
 
 const AuthPageLayout = ({ children, errorMessage }: Props): ReactElement => (

@@ -1,3 +1,5 @@
+import { TRole } from './types';
+
 export const AUTH_TOKEN_KEY = 'authToken';
 
 export enum AppRouteNames {
@@ -8,3 +10,20 @@ export enum AppRouteNames {
   dashboard = '/',
   createTenant = '/create-tenant',
 }
+
+export enum Permissions {
+  CAN_INVITE_USERS = 'CAN_INVITE_USERS',
+}
+
+export const ROLE_PERMISSIONS: Record<TRole, Set<Permissions>> = {
+  chief: new Set([
+    Permissions.CAN_INVITE_USERS,
+  ]),
+  patient: new Set([]),
+  doctor: new Set([
+    Permissions.CAN_INVITE_USERS,
+  ]),
+  admin: new Set([
+    Permissions.CAN_INVITE_USERS,
+  ]),
+};

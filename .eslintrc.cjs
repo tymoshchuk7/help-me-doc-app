@@ -28,5 +28,6 @@ module.exports = {
     'object-curly-newline': 'off',
     'react/jsx-no-useless-fragment': 'off',
     'react/react-in-jsx-scope': 'off',
+    'react/jsx-props-no-spreading': 'off',
   },
 }

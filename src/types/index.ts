@@ -17,6 +17,12 @@ export interface ITenant {
   name: string,
 }
 
+export interface IInvitation {
+  id: string,
+  email: string,
+  role: string,
+}
+
 export interface APIResult<R> {
   hasError: boolean,
   data?: R,

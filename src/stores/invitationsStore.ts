@@ -21,9 +21,19 @@ const processResponse = (data: IInvitation[]) => {
   return result;
 };
 
+const invitationStorageKey = 'preservedInvitation';
+const setPreservedInvitation = (invitation: IInvitation) => (
+  window.sessionStorage.setItem(invitationStorageKey, JSON.stringify(invitation))
+);
+const getPreservedInvitation = (): IInvitation | null => {
+  const invitation = window.sessionStorage.getItem(invitationStorageKey);
+  return invitation ? JSON.parse(invitation) : null;
+};
+const clearPreservedInvitation = () => window.sessionStorage.removeItem(invitationStorageKey);
+
 const useInvitationsStore = create<InvitationsState>((set) => ({
   data: {},
-  preservedInvitation: null,
+  preservedInvitation: getPreservedInvitation(),
   createInvitation: async (data: Pick<IInvitation, 'email' | 'role'>) => apiRequest<{ invitations: IInvitation[] }>({
     path: endpoint,
     body: { data },
@@ -35,11 +45,17 @@ const useInvitationsStore = create<InvitationsState>((set) => ({
   }),
   retrieveInvitation: async (id: string) => apiRequest<{ invitation: IInvitation }>({
     path: `${endpoint}/${id}`,
-    onSuccess: (data) => set({ preservedInvitation: data.invitation }),
+    onSuccess: (data) => {
+      setPreservedInvitation(data.invitation);
+      set({ preservedInvitation: data.invitation });
+    },
   }),
   acceptInvitation: async (id: string) => apiRequest({
     path: `${endpoint}/${id}/accept`,
-    onSuccess: () => set({ preservedInvitation: null }),
+    onSuccess: () => {
+      clearPreservedInvitation();
+      set({ preservedInvitation: null });
+    },
   }),
 }));
 

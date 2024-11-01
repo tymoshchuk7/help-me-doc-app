@@ -8,13 +8,15 @@ import { IUser } from '../types';
 import { useAuth } from '../contexts';
 import { AuthPageLayout, Input } from '../components';
 
+type TForm = Pick<IUser, 'email' | 'password'>;
+
 const LoginPage = (): ReactElement => {
   const { onLogin, onGoogleSignIn } = useAuth();
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<TForm>();
   const [error, setError] = useState<null | Auth0Error>(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: FormProps<IUser>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<TForm>['onFinish'] = async (values) => {
     const { email, password } = values;
     try {
       setLoading(true);

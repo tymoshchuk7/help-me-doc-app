@@ -9,6 +9,7 @@ export enum AppRouteNames {
   changePassword = '/change-password',
   dashboard = '/',
   createTenant = '/create-tenant',
+  invitationCallback = '/invitation/:id',
 }
 
 export enum Permissions {
@@ -20,9 +21,7 @@ export const ROLE_PERMISSIONS: Record<TRole, Set<Permissions>> = {
     Permissions.CAN_INVITE_USERS,
   ]),
   patient: new Set([]),
-  doctor: new Set([
-    Permissions.CAN_INVITE_USERS,
-  ]),
+  doctor: new Set([]),
   admin: new Set([
     Permissions.CAN_INVITE_USERS,
   ]),

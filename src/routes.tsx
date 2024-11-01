@@ -4,11 +4,11 @@ import {
 } from 'react-router-dom';
 import { useAuth } from './contexts';
 import { useAsyncEffect } from './hooks';
-import { useUserStore } from './stores';
+import { useUserStore, useInvitationsStore } from './stores';
 import { AppRouteNames } from './constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
-  LoginPage, SignUpPage, CreateTenantPage,
+  LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
 } from './pages';
 import { Loader } from './components';
 
@@ -16,17 +16,23 @@ const PrivateRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();
   const navigate = useNavigate();
   const { me, getMe } = useUserStore();
+  const { preservedInvitation, acceptInvitation } = useInvitationsStore();
   const [onLoading, setOnLoading] = useState(true);
 
   useAsyncEffect(async () => {
-    if (isAuthorized && !me) {
-      const { data } = await getMe();
-      if (data?.user) {
-        if (!data.user.default_tenant) {
-          navigate(AppRouteNames.createTenant);
+    if (isAuthorized) {
+      if (preservedInvitation) {
+        await acceptInvitation(preservedInvitation.id);
+      }
+      if (!me) {
+        const { data } = await getMe();
+        if (data?.user) {
+          if (!data.user.default_tenant) {
+            navigate(AppRouteNames.createTenant);
+          }
+        } else {
+          onLogOut();
         }
-      } else {
-        onLogOut();
       }
     }
     return setOnLoading(false);
@@ -55,6 +61,10 @@ export const router = createBrowserRouter([
   {
     path: AppRouteNames.changePassword,
     Component: ChangePasswordPage,
+  },
+  {
+    path: AppRouteNames.invitationCallback,
+    Component: InvitationCallbackPage,
   },
   {
     element: <PrivateRoute />,

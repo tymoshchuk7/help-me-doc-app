@@ -9,6 +9,7 @@ import { AppRouteNames } from './constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
+  Page404,
 } from './pages';
 import { Loader } from './components';
 
@@ -78,5 +79,9 @@ export const router = createBrowserRouter([
         Component: CreateTenantPage,
       },
     ],
+  },
+  {
+    path: '*',
+    Component: Page404,
   },
 ]);

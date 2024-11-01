@@ -5,3 +5,4 @@ export { default as DashboardPage } from './DashboardPage';
 export { default as LoginPage } from './LoginPage';
 export { default as SignUpPage } from './SignUpPage';
 export { default as InvitationCallbackPage } from './InvitationCallbackPage';
+export { default as Page404 } from './Page404';

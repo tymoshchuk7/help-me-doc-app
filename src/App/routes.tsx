@@ -2,16 +2,16 @@ import { ReactElement, useState } from 'react';
 import {
   createBrowserRouter, Navigate, Outlet, useNavigate,
 } from 'react-router-dom';
-import { useAuth } from './contexts';
-import { useAsyncEffect } from './hooks';
-import { useUserStore, useInvitationsStore } from './stores';
-import { AppRouteNames } from './constants';
+import { useAuth } from '../contexts';
+import { useAsyncEffect } from '../hooks';
+import { useUserStore, useInvitationsStore } from '../stores';
+import { AppRouteNames } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
   Page404,
-} from './pages';
-import { Loader } from './components';
+} from '../pages';
+import { Loader } from '../components';
 
 const PrivateRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();

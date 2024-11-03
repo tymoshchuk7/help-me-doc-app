@@ -12,6 +12,7 @@ import {
   Page404,
 } from '../pages';
 import { Loader } from '../components';
+import ErrorBoundary from './ErrorBoundary';
 
 const PrivateRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();
@@ -48,40 +49,45 @@ const PrivateRoute = (): ReactElement => {
 
 export const router = createBrowserRouter([
   {
-    path: AppRouteNames.authCallback,
-    Component: AuthCallbackPage,
-  },
-  {
-    path: AppRouteNames.login,
-    Component: LoginPage,
-  },
-  {
-    path: AppRouteNames.signup,
-    Component: SignUpPage,
-  },
-  {
-    path: AppRouteNames.changePassword,
-    Component: ChangePasswordPage,
-  },
-  {
-    path: AppRouteNames.invitationCallback,
-    Component: InvitationCallbackPage,
-  },
-  {
-    element: <PrivateRoute />,
+    Component: ErrorBoundary,
     children: [
       {
-        path: AppRouteNames.dashboard,
-        Component: DashboardPage,
+        path: AppRouteNames.authCallback,
+        Component: AuthCallbackPage,
       },
       {
-        path: AppRouteNames.createTenant,
-        Component: CreateTenantPage,
+        path: AppRouteNames.login,
+        Component: LoginPage,
+      },
+      {
+        path: AppRouteNames.signup,
+        Component: SignUpPage,
+      },
+      {
+        path: AppRouteNames.changePassword,
+        Component: ChangePasswordPage,
+      },
+      {
+        path: AppRouteNames.invitationCallback,
+        Component: InvitationCallbackPage,
+      },
+      {
+        element: <PrivateRoute />,
+        children: [
+          {
+            path: AppRouteNames.dashboard,
+            Component: DashboardPage,
+          },
+          {
+            path: AppRouteNames.createTenant,
+            Component: CreateTenantPage,
+          },
+        ],
+      },
+      {
+        path: '*',
+        Component: Page404,
       },
     ],
-  },
-  {
-    path: '*',
-    Component: Page404,
   },
 ]);

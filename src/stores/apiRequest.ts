@@ -1,4 +1,5 @@
 import { AxiosError } from 'axios';
+import { toast } from 'react-toastify';
 import useAppStore from './appStore';
 import { axiosClient } from '../helpers';
 import { APIResult } from '../types';
@@ -11,6 +12,8 @@ interface Params<T> {
   },
   onSuccess?: (data: T) => void,
   onFail?: (error: AxiosError) => void,
+  successToastMessage?: string,
+  failToastMessage?: string,
 }
 
 function getUnauthorizedUrl(): string {
@@ -21,7 +24,7 @@ function getUnauthorizedUrl(): string {
 }
 
 export const apiRequest = async <R extends Record<string, any>>({
-  path, method, body, onSuccess, onFail,
+  path, method, body, onSuccess, onFail, successToastMessage, failToastMessage,
 }: Params<R>): Promise<APIResult<R>> => {
   const { token, setAuthToken } = useAppStore.getState();
   try {
@@ -32,6 +35,9 @@ export const apiRequest = async <R extends Record<string, any>>({
       body,
     });
 
+    if (successToastMessage) {
+      toast(successToastMessage, { type: 'success' });
+    }
     onSuccess?.(data);
     return { hasError: false, data };
   } catch (e) {
@@ -41,6 +47,9 @@ export const apiRequest = async <R extends Record<string, any>>({
       window.location.href = getUnauthorizedUrl();
     }
 
+    if (failToastMessage) {
+      toast(failToastMessage, { type: 'error' });
+    }
     onFail?.(error);
     return { hasError: true, error };
   }

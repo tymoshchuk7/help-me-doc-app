@@ -38,6 +38,7 @@ const useInvitationsStore = create<InvitationsState>((set) => ({
     path: endpoint,
     body: { data },
     method: 'post',
+    successToastMessage: 'The invitation has been sent',
   }),
   getTenantInvitations: async () => apiRequest<{ invitations: IInvitation[] }>({
     path: endpoint,

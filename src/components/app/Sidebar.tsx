@@ -18,8 +18,8 @@ const sidebarItems: SidebarItemProps[] = [{
   permissions: [],
   Icon: ContactsOutlined as unknown as () => ReactElement,
 }, {
-  title: 'Messages',
-  to: '/',
+  title: 'Chats',
+  to: '/chats',
   permissions: [Permissions.CAN_SEND_MESSAGES],
   Icon: MessageOutlined as unknown as () => ReactElement,
 }];

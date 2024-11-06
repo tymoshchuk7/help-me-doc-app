@@ -3,18 +3,18 @@ import {
   createBrowserRouter, Navigate, Outlet, useNavigate,
 } from 'react-router-dom';
 import { useAuth } from '../contexts';
-import { useAsyncEffect } from '../hooks';
+import { useAsyncEffect, useHasPermissions } from '../hooks';
 import { useUserStore, useInvitationsStore } from '../stores';
-import { AppRouteNames } from '../constants';
+import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
-  Page404,
+  Page404, ChatsPage,
 } from '../pages';
 import { Loader } from '../components';
 import ErrorBoundary from './ErrorBoundary';
 
-const PrivateRoute = (): ReactElement => {
+const AuthenticatedRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();
   const navigate = useNavigate();
   const { me, getMe } = useUserStore();
@@ -47,6 +47,13 @@ const PrivateRoute = (): ReactElement => {
   return isAuthorized ? <Outlet /> : <Navigate to={AppRouteNames.login} />;
 };
 
+const RestrictedPermissionsRoute = (
+  { permissions }: { permissions: Permissions[] },
+): ReactElement => {
+  const hasPermissions = useHasPermissions(permissions);
+  return hasPermissions ? <Outlet /> : <Navigate to={AppRouteNames.dashboard} />;
+};
+
 export const router = createBrowserRouter([
   {
     Component: ErrorBoundary,
@@ -72,7 +79,7 @@ export const router = createBrowserRouter([
         Component: InvitationCallbackPage,
       },
       {
-        element: <PrivateRoute />,
+        element: <AuthenticatedRoute />,
         children: [
           {
             path: AppRouteNames.dashboard,
@@ -81,6 +88,16 @@ export const router = createBrowserRouter([
           {
             path: AppRouteNames.createTenant,
             Component: CreateTenantPage,
+          },
+          {
+            path: AppRouteNames.chats,
+            element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+            children: [
+              {
+                index: true,
+                element: <ChatsPage />,
+              },
+            ],
           },
         ],
       },

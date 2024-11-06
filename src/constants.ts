@@ -10,11 +10,12 @@ export enum AppRouteNames {
   dashboard = '/',
   createTenant = '/create-tenant',
   invitationCallback = '/invitation/:id',
+  chats = '/chats',
 }
 
 export enum Permissions {
   CAN_INVITE_USERS = 'CAN_INVITE_USERS',
-  CAN_SEND_MESSAGES = 'CAN_CREATE_DISEASES',
+  CAN_SEND_MESSAGES = 'CAN_SEND_MESSAGES',
   CAN_CREATE_DISEASES = 'CAN_CREATE_DISEASES',
 }
 

@@ -4,12 +4,15 @@ import { FloatButton } from 'antd';
 import { useHasPermissions } from '../../hooks';
 import { Permissions } from '../../constants';
 
+export type ModalType = 'message' | 'disease';
+
 interface MenuItemProps {
+  item: ModalType
   Icon: () => ReactElement,
   permissions: Permissions[],
 }
 
-const menuItems: Array<MenuItemProps & { item: string }> = [{
+const menuItems: MenuItemProps[] = [{
   item: 'message',
   Icon: MessageOutlined as unknown as () => ReactElement,
   permissions: [Permissions.CAN_SEND_MESSAGES],
@@ -19,19 +22,27 @@ const menuItems: Array<MenuItemProps & { item: string }> = [{
   permissions: [Permissions.CAN_CREATE_DISEASES],
 }];
 
-const FloatingMenuItem = ({ Icon, permissions }: MenuItemProps): ReactElement | null => {
+const FloatingMenuItem = (
+  { Icon, permissions, onClick, item }: MenuItemProps & { onClick: (item: ModalType) => void },
+): ReactElement | null => {
   const hasPermission = useHasPermissions(permissions);
-  return hasPermission ? <FloatButton icon={<Icon />} /> : null;
+  return hasPermission ? <FloatButton icon={<Icon />} onClick={() => onClick(item)} /> : null;
 };
 
-const FloatingMenu = (): ReactElement => (
+const FloatingMenu = ({ onClick }: { onClick: (item: ModalType) => void }): ReactElement => (
   <FloatButton.Group
     trigger="click"
     type="primary"
     style={{ insetInlineEnd: 24 }}
     icon={<MoreOutlined />}
   >
-    {menuItems.map((item) => <FloatingMenuItem key={`floating-menu-item-${item.item}`} {...item} />)}
+    {menuItems.map((item) => (
+      <FloatingMenuItem
+        key={`floating-menu-item-${item.item}`}
+        onClick={onClick}
+        {...item}
+      />
+    ))}
   </FloatButton.Group>
 );
 

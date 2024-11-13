@@ -10,9 +10,13 @@ interface Props {
   loader?: ReactNode,
 }
 
+const loaderPlaceholder = <div>loading...</div>;
+
 /* Accepts promises returned via useDispatchPromise custom hook */
 
-const Resolve = ({ promises, children, onLoad, loader }: Props): ReactElement | null => {
+const Resolve = ({
+  promises, children, onLoad, loader = loaderPlaceholder,
+}: Props): ReactElement | null => {
   const [loaded, onSetLoaded] = useState(false);
   const [error, onSetError] = useState<Error | string | null>(null);
   const [values, onSetValues] = useState<unknown[]>([]);
@@ -34,7 +38,7 @@ const Resolve = ({ promises, children, onLoad, loader }: Props): ReactElement | 
   }
 
   if (!loaded) {
-    return loader || <div>loading...</div>;
+    return <>{loader}</>;
   }
 
   return children(...values);

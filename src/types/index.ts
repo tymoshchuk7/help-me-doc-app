@@ -35,3 +35,7 @@ export interface ITenantParticipant {
   status: string,
   role: TRole,
 }
+
+export interface ITenantChat {
+  id: string,
+}

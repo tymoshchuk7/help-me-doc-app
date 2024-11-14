@@ -1,35 +1,56 @@
-import { ReactElement } from 'react';
+import { ReactElement, useState } from 'react';
 import {
-  Modal, Form, Skeleton, Input,
-  Select as AntdSelect, Button,
+  Modal, Form, Skeleton,
+  Select as AntdSelect, Button, FormProps,
 } from 'antd';
-import Resolve from '../helpers/Resolve';
 import { useDispatchPromise } from '../../hooks';
 import { useChatsStore } from '../../stores';
 import { ITenantParticipant, IUser } from '../../types';
+import { messageValidator } from '../../validators';
+import Resolve from '../helpers/Resolve';
 import Select from '../controls/Select';
+import TextArea from '../controls/TextArea';
 
 const { Option } = AntdSelect;
-const { TextArea } = Input;
 
 interface Props {
   open: boolean,
   closeModal: () => void,
 }
 
-interface Response {
-  contacts: ITenantParticipant[],
+interface IForm {
+  recipient: string,
+  content: string,
 }
 
 const ModalBody = (): ReactElement => {
-  const { getAvailableContacts } = useChatsStore();
-  const loadPromise = useDispatchPromise<Response>(getAvailableContacts);
+  const { getAvailableContacts, createNewMessage } = useChatsStore();
+  const loadPromise = useDispatchPromise(getAvailableContacts);
+  const [form] = Form.useForm<IForm>();
+  const [loading, setLoading] = useState(false);
+  const [, setError] = useState<null | undefined | Error>(null);
+
+  const onSubmit: FormProps<IForm>['onFinish'] = async (values) => {
+    const { recipient, content } = values;
+    try {
+      setLoading(true);
+      await createNewMessage(recipient, content);
+    } catch (e) {
+      setError(e as Error);
+    }
+    setLoading(false);
+  };
 
   return (
     <Resolve promises={[loadPromise]} loader={<Skeleton active paragraph={{ rows: 4 }} />}>
       {(data) => (
-        <Form>
-          <Select placeholder="Select a recipient bellow" name="recipient" rules={[]} label="Recipient">
+        <Form onFinish={onSubmit} form={form} layout="vertical">
+          <Select
+            placeholder="Select a recipient bellow"
+            name="recipient"
+            rules={messageValidator.recipient}
+            label="Recipient"
+          >
             {(data.data.contacts as Array<ITenantParticipant & IUser>).map((participant) => (
               <Option
                 key={`send-message-contact-${participant.id}`}
@@ -41,9 +62,9 @@ const ModalBody = (): ReactElement => {
               </Option>
             ))}
           </Select>
-          <TextArea style={{ height: 120, resize: 'none' }} />
+          <TextArea rules={messageValidator.recipient} name="content" placeholder="" />
           <div className="flex justify-end">
-            <Button htmlType="submit" disabled style={{ marginTop: '24px' }}>
+            <Button htmlType="submit" disabled={loading}>
               Send!
             </Button>
           </div>

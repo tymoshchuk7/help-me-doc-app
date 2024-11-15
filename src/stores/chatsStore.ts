@@ -3,13 +3,15 @@ import { apiRequest } from './apiRequest';
 import { encryptionClient } from '../helpers';
 import {
   APIResult, ITenantParticipant, IUser, ITenantChat,
+  IChatPartner,
 } from '../types';
 
 interface ChatsState {
   getAvailableContacts: () => Promise<APIResult<{ contacts: ITenantParticipant & IUser }>>,
   createNewMessage: (
     recipientParticipantId: string, content: string,
-  ) => Promise<APIResult<ITenantChat>>,
+  ) => Promise<APIResult<{ chat: ITenantChat }>>,
+  loadChats: () => Promise<APIResult<{ chats: Array<ITenantChat & IChatPartner> }>>
 }
 
 const endpoint = '/chats';
@@ -23,6 +25,9 @@ const useChatsStore = create<ChatsState>(() => ({
     method: 'post',
     body: { data: { participantRecipientId, content: encryptionClient.encryptMessage(content) } },
     successToastMessage: 'Message has been sent!',
+  }),
+  loadChats: () => apiRequest({
+    path: endpoint,
   }),
 }));
 

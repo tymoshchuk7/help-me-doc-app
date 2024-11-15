@@ -39,3 +39,10 @@ export interface ITenantParticipant {
 export interface ITenantChat {
   id: string,
 }
+
+export interface IChatPartner {
+  chat_partner_participant_id: string,
+  chat_partner_first_name: string,
+  chat_partner_last_name: string,
+  chat_partner_avatar: string | null,
+}

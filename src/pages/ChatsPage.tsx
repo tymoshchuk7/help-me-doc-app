@@ -1,13 +1,12 @@
 import { ReactElement } from 'react';
-import { Typography, Card, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Typography } from 'antd';
+import { NavLink } from 'react-router-dom';
 import { useChatsStore } from '../stores';
 import { useDispatchPromise } from '../hooks';
-import { AppPageLayout, Resolve } from '../components';
+import { AppPageLayout, ChatCard, Resolve } from '../components';
 import { ITenantChat, IChatPartner } from '../types';
 
 const { Title } = Typography;
-const { Meta } = Card;
 
 const ChatsPage = (): ReactElement => {
   const { loadChats } = useChatsStore();
@@ -17,20 +16,15 @@ const ChatsPage = (): ReactElement => {
     <AppPageLayout>
       <Title level={4}>Your chats</Title>
       <Resolve promises={[loadChatsPromise]}>
-        {(data) => (
+        {({ data }) => (
           <div>
-            {data.data.chats.map((chat: ITenantChat & IChatPartner) => (
-              <Card key={`chat-${chat.id}`} style={{ maxWidth: 400, marginBottom: 12 }}>
-                <Meta
-                  avatar={(
-                    <Avatar
-                      src={chat.chat_partner_avatar}
-                      icon={!chat.chat_partner_avatar ? <UserOutlined /> : null}
-                    />
-                  )}
-                  title={`${chat.chat_partner_first_name} ${chat.chat_partner_last_name}`}
+            {data.chats.map((chat: ITenantChat & IChatPartner) => (
+              <NavLink key={`chat-${chat.id}`} to={`/chats/${chat.id}`}>
+                <ChatCard
+                  avatarSrc={chat.chat_partner_avatar}
+                  name={`${chat.chat_partner_first_name} ${chat.chat_partner_last_name}`}
                 />
-              </Card>
+              </NavLink>
             ))}
           </div>
         )}

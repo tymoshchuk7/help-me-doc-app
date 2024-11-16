@@ -46,3 +46,13 @@ export interface IChatPartner {
   chat_partner_last_name: string,
   chat_partner_avatar: string | null,
 }
+
+export interface ITenantMessage {
+  id: string,
+  chat_id: string,
+  chat_member_id: string,
+  content: string,
+  sent_timestamp: string,
+  participant_id: string
+  user_id: string,
+}

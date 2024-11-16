@@ -11,6 +11,7 @@ export enum AppRouteNames {
   createTenant = '/create-tenant',
   invitationCallback = '/invitation/:id',
   chats = '/chats',
+  chat = '/chats/:id',
 }
 
 export enum Permissions {

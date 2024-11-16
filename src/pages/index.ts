@@ -1,5 +1,6 @@
 export { default as AuthCallbackPage } from './AuthCallbackPage';
 export { default as ChangePasswordPage } from './ChangePasswordPage';
+export { default as ChatPage } from './ChatPage';
 export { default as ChatsPage } from './ChatsPage';
 export { default as CreateTenantPage } from './CreateTenantPage';
 export { default as DashboardPage } from './DashboardPage';

@@ -3,7 +3,7 @@ import { apiRequest } from './apiRequest';
 import { encryptionClient } from '../helpers';
 import {
   APIResult, ITenantParticipant, IUser, ITenantChat,
-  IChatPartner,
+  IChatPartner, ITenantMessage,
 } from '../types';
 
 interface ChatsState {
@@ -12,6 +12,9 @@ interface ChatsState {
     recipientParticipantId: string, content: string,
   ) => Promise<APIResult<{ chat: ITenantChat }>>,
   loadChats: () => Promise<APIResult<{ chats: Array<ITenantChat & IChatPartner> }>>
+  retrieveChat: (
+    id: string,
+  ) => Promise<APIResult<{ chat: ITenantChat & IChatPartner, messages: ITenantMessage[] }>>
 }
 
 const endpoint = '/chats';
@@ -28,6 +31,9 @@ const useChatsStore = create<ChatsState>(() => ({
   }),
   loadChats: () => apiRequest({
     path: endpoint,
+  }),
+  retrieveChat: (chatId: string) => apiRequest({
+    path: `${endpoint}/${chatId}`,
   }),
 }));
 

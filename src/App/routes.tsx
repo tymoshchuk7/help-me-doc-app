@@ -9,7 +9,7 @@ import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
-  Page404, ChatsPage,
+  Page404, ChatsPage, ChatPage,
 } from '../pages';
 import { Loader } from '../components';
 import ErrorBoundary from './ErrorBoundary';
@@ -96,6 +96,16 @@ export const router = createBrowserRouter([
               {
                 index: true,
                 element: <ChatsPage />,
+              },
+            ],
+          },
+          {
+            path: AppRouteNames.chat,
+            element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+            children: [
+              {
+                index: true,
+                element: <ChatPage />,
               },
             ],
           },

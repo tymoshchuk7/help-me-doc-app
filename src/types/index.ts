@@ -38,6 +38,8 @@ export interface ITenantParticipant {
 
 export interface ITenantChat {
   id: string,
+  me_chat_member_id: string,
+  me_participant_id: string,
 }
 
 export interface IChatPartner {

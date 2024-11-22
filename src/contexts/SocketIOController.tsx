@@ -22,19 +22,18 @@ export const SocketIOProvider = ({ children }: { children: ReactNode }): ReactEl
   const [socketIO, setSocketIO] = useState<Socket | null>(null);
 
   useEffect(() => {
-    if (token && me?.participant?.id) {
+    if (token && me?.participant?.id && me.default_tenant) {
       const socket = io('http://localhost:8000', {
         auth: {
           token,
           participantId: me?.participant?.id,
+          tenantId: me.default_tenant,
         },
         transports: ['websocket'],
       });
       setSocketIO(socket);
     }
-  }, [me?.participant?.id, token]);
-
-  // const connected = useMemo(() => !!socketIO?.connected, [socketIO]);
+  }, [me, token]);
 
   const enterChatSocketIORoom = (chatId: string) => socketIO?.emit('ENTER_CHAT_ROOM', chatId);
   const leaveChatSocketIORoom = (chatId: string) => socketIO?.emit('LEAVE_CHAT_ROOM', chatId);

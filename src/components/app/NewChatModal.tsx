@@ -23,7 +23,7 @@ interface IForm {
   content: string,
 }
 
-const ModalBody = (): ReactElement => {
+const ModalBody = ({ closeModal }: { closeModal: () => void }): ReactElement => {
   const { getAvailableContacts, createNewMessage } = useChatsStore();
   const loadPromise = useDispatchPromise(getAvailableContacts);
   const [form] = Form.useForm<IForm>();
@@ -34,7 +34,11 @@ const ModalBody = (): ReactElement => {
     const { recipient, content } = values;
     try {
       setLoading(true);
-      await createNewMessage(recipient, content);
+      const { hasError } = await createNewMessage(recipient, content);
+      if (!hasError) {
+        form.resetFields();
+        closeModal();
+      }
     } catch (e) {
       setError(e as Error);
     }
@@ -82,7 +86,7 @@ const NewChatModal = ({ open, closeModal }: Props): ReactElement => (
     okButtonProps={{ style: { display: 'none' } }}
     footer={<></>}
   >
-    <ModalBody />
+    <ModalBody closeModal={closeModal} />
   </Modal>
 );
 

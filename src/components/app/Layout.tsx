@@ -1,5 +1,6 @@
-import { ReactElement, ReactNode, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import { Layout } from 'antd';
+import { Outlet } from 'react-router-dom';
 import Header from './Header';
 import Sidebar from './Sidebar';
 import FloatingMenu, { ModalType } from './FloatingMenu';
@@ -7,7 +8,7 @@ import NewMessageModal from './NewChatModal';
 
 const { Content } = Layout;
 
-const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
+const AppLayout = (): ReactElement => {
   const [modalVisibility, setModalVisibility] = useState<null | ModalType>(null);
 
   return (
@@ -25,7 +26,7 @@ const AppLayout = ({ children }: { children: ReactNode }): ReactElement => {
               minHeight: 280,
             }}
           >
-            {children}
+            <Outlet />
           </Content>
         </Layout>
       </Layout>

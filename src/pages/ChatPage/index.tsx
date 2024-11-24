@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useChatsStore } from '../../stores';
 import { useDispatchPromise } from '../../hooks';
 import { useSocketIO } from '../../contexts';
-import { AppPageLayout, Resolve } from '../../components';
+import { Resolve } from '../../components';
 import Chat from './Chat';
 
 const ChatPage = (): ReactElement => {
@@ -12,11 +12,9 @@ const ChatPage = (): ReactElement => {
   const retrieveChatPromise = useDispatchPromise(() => retrieveChat(id as string));
 
   return (
-    <AppPageLayout>
-      <Resolve promises={[retrieveChatPromise]}>
-        {({ data }) => <Chat chat={data.chat} messages={data.messages} />}
-      </Resolve>
-    </AppPageLayout>
+    <Resolve promises={[retrieveChatPromise]}>
+      {({ data }) => <Chat chat={data.chat} messages={data.messages} />}
+    </Resolve>
   );
 };
 

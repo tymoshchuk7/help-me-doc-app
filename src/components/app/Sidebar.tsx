@@ -1,46 +1,63 @@
-import { ReactElement, useState } from 'react';
+import { ReactElement, useState, ReactNode, useMemo } from 'react';
 import { Menu, Layout } from 'antd';
 import { ContactsOutlined, MessageOutlined } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
-import { useHasPermissions } from '../../hooks';
-import { Permissions } from '../../constants';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { useUserStore } from '../../stores';
+import { Permissions, ROLE_PERMISSIONS } from '../../constants';
 
 interface ISidebarItem {
-  title: string,
+  key: string,
+  label: string,
   to: string,
-  Icon: () => ReactElement,
+  icon: ReactNode,
   permissions: Permissions[],
+  selected: (to: string, pathname: string) => boolean,
 }
 
-const sidebarItems: ISidebarItem[] = [{
-  title: 'Dashboard',
+const allSidebarItems: ISidebarItem[] = [{
+  key: 'Dashboard',
+  label: 'Dashboard',
   to: '/',
   permissions: [],
-  Icon: ContactsOutlined as unknown as () => ReactElement,
+  icon: <ContactsOutlined />,
+  selected: (to, pathname) => to === pathname,
 }, {
-  title: 'Chats',
+  key: 'Chats',
+  label: 'Chats',
   to: '/chats',
   permissions: [Permissions.CAN_SEND_MESSAGES],
-  Icon: MessageOutlined as unknown as () => ReactElement,
+  icon: <MessageOutlined />,
+  selected: (to, pathname) => pathname.startsWith(to),
 }];
 
-const SidebarItem = ({
-  title, to, Icon, permissions, collapsed,
-}: ISidebarItem & { collapsed: boolean }): ReactElement | null => {
-  const hasPermissions = useHasPermissions(permissions);
-
-  return hasPermissions ? (
-    <Menu.Item>
-      <Link to={to} className={!collapsed ? 'ml-20' : ''}>
-        <Icon />
-        <span className="ml-20">{title}</span>
-      </Link>
-    </Menu.Item>
-  ) : null;
-};
-
 const Sidebar = (): ReactElement => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { me } = useUserStore();
   const [collapsed, setCollapsed] = useState(false);
+
+  // eslint-disable-next-line arrow-body-style
+  const participantSidebarItems = useMemo(() => {
+    return allSidebarItems.filter((item) => {
+      if (item.permissions.length === 0) {
+        return true;
+      }
+      const role = me?.participant?.role;
+      if (!role) {
+        return false;
+      }
+      return item.permissions.every((permission) => ROLE_PERMISSIONS[role].has(permission));
+    }).map((item) => ({
+      key: item.key,
+      label: item.label,
+      icon: item.icon,
+      to: item.to,
+    }));
+  }, [me?.participant?.role]);
+
+  const selectedSidebarItem = useMemo(() => (
+    allSidebarItems.find((item) => item.selected(item.to, location.pathname))
+  ), [location.pathname]);
 
   return (
     <Layout.Sider
@@ -52,18 +69,11 @@ const Sidebar = (): ReactElement => {
     >
       <Menu
         mode="inline"
-        defaultSelectedKeys={['1']}
-        defaultOpenKeys={['sub1']}
+        selectedKeys={selectedSidebarItem ? [selectedSidebarItem?.key] : []}
         style={{ height: '100%', borderRight: 0 }}
-      >
-        {sidebarItems.map((item) => (
-          <SidebarItem
-            key={`sidebar-item-${item.title}`}
-            collapsed={collapsed}
-            {...item}
-          />
-        ))}
-      </Menu>
+        items={participantSidebarItems}
+        onSelect={(item) => navigate((item.item as unknown as { props: { to: string } }).props.to)}
+      />
     </Layout.Sider>
   );
 };

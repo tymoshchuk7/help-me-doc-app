@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { ReactElement, useState } from 'react';
 import {
   createBrowserRouter, Navigate, Outlet, useNavigate,
@@ -11,7 +12,7 @@ import {
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
   Page404, ChatsPage, ChatPage,
 } from '../pages';
-import { Loader } from '../components';
+import { Loader, AppPageLayout } from '../components';
 import ErrorBoundary from './ErrorBoundary';
 
 const AuthenticatedRoute = (): ReactElement => {
@@ -82,30 +83,35 @@ export const router = createBrowserRouter([
         element: <AuthenticatedRoute />,
         children: [
           {
-            path: AppRouteNames.dashboard,
-            Component: DashboardPage,
-          },
-          {
             path: AppRouteNames.createTenant,
             Component: CreateTenantPage,
           },
           {
-            path: AppRouteNames.chats,
-            element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+            element: <AppPageLayout />,
             children: [
               {
-                index: true,
-                element: <ChatsPage />,
+                path: AppRouteNames.dashboard,
+                Component: DashboardPage,
               },
-            ],
-          },
-          {
-            path: AppRouteNames.chat,
-            element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
-            children: [
               {
-                index: true,
-                element: <ChatPage />,
+                path: AppRouteNames.chats,
+                element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+                children: [
+                  {
+                    index: true,
+                    element: <ChatsPage />,
+                  },
+                ],
+              },
+              {
+                path: AppRouteNames.chat,
+                element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+                children: [
+                  {
+                    index: true,
+                    element: <ChatPage />,
+                  },
+                ],
               },
             ],
           },

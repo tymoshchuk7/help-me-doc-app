@@ -3,7 +3,7 @@ import { Typography } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { useChatsStore } from '../stores';
 import { useDispatchPromise } from '../hooks';
-import { AppPageLayout, ChatCard, Resolve } from '../components';
+import { ChatCard, Resolve } from '../components';
 import { ITenantChat, IChatPartner } from '../types';
 
 const { Title } = Typography;
@@ -13,7 +13,7 @@ const ChatsPage = (): ReactElement => {
   const loadChatsPromise = useDispatchPromise(loadChats);
 
   return (
-    <AppPageLayout>
+    <>
       <Title level={4}>Your chats</Title>
       <Resolve promises={[loadChatsPromise]}>
         {({ data }) => (
@@ -29,7 +29,7 @@ const ChatsPage = (): ReactElement => {
           </div>
         )}
       </Resolve>
-    </AppPageLayout>
+    </>
   );
 };
 

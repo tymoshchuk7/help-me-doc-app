@@ -58,3 +58,13 @@ export interface ITenantMessage {
   participant_id: string
   user_id: string,
 }
+
+export interface ITenantDisease {
+  id: string,
+  doctor_participant_id: string,
+  patient_participant_id: string,
+  name: string,
+  status: 'active' | 'resolved' | 'chronic',
+  description: string,
+  treatment: string,
+}

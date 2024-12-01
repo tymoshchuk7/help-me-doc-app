@@ -18,14 +18,14 @@ const ChatsPage = (): ReactElement => {
       <Resolve promises={[loadChatsPromise]}>
         {({ data }) => (
           <div>
-            {data.chats.map((chat: ITenantChat & IChatPartner) => (
+            {data?.chats?.length !== 0 ? data.chats.map((chat: ITenantChat & IChatPartner) => (
               <NavLink key={`chat-${chat.id}`} to={`/chats/${chat.id}`}>
                 <ChatCard
                   avatarSrc={chat.chat_partner_avatar}
                   name={`${chat.chat_partner_first_name} ${chat.chat_partner_last_name}`}
                 />
               </NavLink>
-            ))}
+            )) : <div>You haven’t created any chats yet. Start your first one now!!</div>}
           </div>
         )}
       </Resolve>

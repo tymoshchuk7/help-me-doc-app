@@ -21,7 +21,7 @@ const ChatsPage = (): ReactElement => {
         promises={[loadChatsPromise]}
         loader={(
           <div>
-            {skeletonArray.map((item, index) => (
+            {skeletonArray.map((_, index) => (
               <Skeleton
                 // eslint-disable-next-line react/no-array-index-key
                 key={`chat-page-skeleton-${index}`}

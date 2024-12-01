@@ -1,5 +1,5 @@
 import { ReactElement } from 'react';
-import { Typography } from 'antd';
+import { Typography, Skeleton } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { useChatsStore } from '../stores';
 import { useDispatchPromise } from '../hooks';
@@ -8,6 +8,8 @@ import { ITenantChat, IChatPartner } from '../types';
 
 const { Title } = Typography;
 
+const skeletonArray = new Array(5).fill(0);
+
 const ChatsPage = (): ReactElement => {
   const { loadChats } = useChatsStore();
   const loadChatsPromise = useDispatchPromise(loadChats);
@@ -15,7 +17,23 @@ const ChatsPage = (): ReactElement => {
   return (
     <>
       <Title level={4}>Your chats</Title>
-      <Resolve promises={[loadChatsPromise]}>
+      <Resolve
+        promises={[loadChatsPromise]}
+        loader={(
+          <div>
+            {skeletonArray.map((item, index) => (
+              <Skeleton
+                // eslint-disable-next-line react/no-array-index-key
+                key={`chat-page-skeleton-${index}`}
+                className="mt-20"
+                active
+                avatar
+                paragraph={{ rows: 0 }}
+              />
+            ))}
+          </div>
+        )}
+      >
         {({ data }) => (
           <div>
             {data?.chats?.length !== 0 ? data.chats.map((chat: ITenantChat & IChatPartner) => (

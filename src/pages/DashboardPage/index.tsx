@@ -1,8 +1,9 @@
 import { ReactElement } from 'react';
-import { useHasPermissions } from '../hooks';
-import { useUserStore } from '../stores';
-import { Permissions } from '../constants';
-import { InviteParticipants } from '../components';
+import { useHasPermissions } from '../../hooks';
+import { useUserStore } from '../../stores';
+import { Permissions } from '../../constants';
+import { InviteParticipants } from '../../components';
+import TableWidget from './TableWidget';
 
 // TODO move invite form to an other place later
 
@@ -19,6 +20,7 @@ const DashboardPage = (): ReactElement => {
           <InviteParticipants />
         </div>
       )}
+      <TableWidget />
     </>
   );
 };

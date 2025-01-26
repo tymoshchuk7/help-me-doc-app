@@ -31,6 +31,7 @@ export const SocketIOProvider = ({ children }: { children: ReactNode }): ReactEl
         },
         transports: ['websocket'],
       });
+      socket.on('READY', () => setReady(true));
       setSocketIO(socket);
     }
   }, [me, token]);

@@ -1,39 +1,42 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useChatsStore } from '../../stores';
 import { useDispatchPromise } from '../../hooks';
 import { useSocketIO } from '../../contexts';
-import { Resolve } from '../../components';
+import { Resolve, Spinner } from '../../components';
 import Chat from './Chat';
 
-const ChatPage = (): ReactElement => {
-  const { id } = useParams<{ id: string }>();
-  const { retrieveChat } = useChatsStore();
-  const retrieveChatPromise = useDispatchPromise(() => retrieveChat(id as string));
-
-  return (
-    <Resolve promises={[retrieveChatPromise]}>
-      {({ data }) => <Chat chat={data.chat} messages={data.messages} />}
-    </Resolve>
-  );
-};
-
-const ChatPageContainer = (): ReactElement | null => {
+const ChatPage = (): ReactElement | null => {
   const { id } = useParams<{ id: string }>();
   const { enterChatSocketIORoom, leaveChatSocketIORoom } = useSocketIO();
-  const [renderPage, setRenderPage] = useState(false);
+  const { retrieveChat } = useChatsStore();
+  const retrieveChatPromise = useDispatchPromise(() => retrieveChat(id as string));
 
   useEffect(() => {
     if (id) {
       enterChatSocketIORoom(id);
-      setRenderPage(true);
       return () => leaveChatSocketIORoom(id);
     }
     return () => {};
     // eslint-disable-next-line
   }, []);
 
-  return renderPage ? <ChatPage /> : null;
+  return (
+    <Resolve promises={[retrieveChatPromise]}>
+      {({ data }) => <Chat chat={data?.chat} messages={data?.messages || []} />}
+    </Resolve>
+  );
+};
+
+const ChatPageContainer = () => {
+  const { id } = useParams<{ id: string }>();
+  const { ready } = useSocketIO();
+
+  return ready ? <ChatPage key={id} /> : (
+    <div className="w-100 flex justify-center align-center h-100">
+      <Spinner />
+    </div>
+  );
 };
 
 export default ChatPageContainer;

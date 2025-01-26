@@ -1,12 +1,9 @@
 import { ReactElement } from 'react';
-import { LoadingOutlined } from '@ant-design/icons';
-import { Spin } from 'antd';
-
-const antIcon = <LoadingOutlined style={{ fontSize: 36 }} spin />;
+import Spinner from './Spinner';
 
 const Loader = (): ReactElement => (
   <div className="min-height-100vh flex justify-center align-center">
-    <Spin indicator={antIcon} />
+    <Spinner />
   </div>
 );
 

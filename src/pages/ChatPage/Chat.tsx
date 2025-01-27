@@ -9,6 +9,7 @@ import { encryptionClient } from '../../helpers';
 import { messageValidator } from '../../validators';
 import { ITenantMessage, ITenantChat, IChatPartner } from '../../types';
 import { TextArea } from '../../components';
+import Message from './Message';
 
 const { Title } = Typography;
 
@@ -78,11 +79,7 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
         <div style={{ maxWidth: '40rem', flexGrow: 1 }}>
           <div style={{ height: 'calc(100vh - 340px)', overflow: 'auto' }} ref={messageContainerRef}>
             {messages.map((message: ITenantMessage) => (
-              <div key={message.id} className={`flex ${chat.me_chat_member_id === message.chat_member_id ? 'justify-end' : 'justify-start'}`}>
-                <div className={`chat-message ${chat?.me_chat_member_id === message.chat_member_id ? 'sent-message' : 'received-message'}`}>
-                  {encryptionClient.decryptMessage(message.content)}
-                </div>
-              </div>
+              <Message key={message.id} chat={chat} message={message} />
             ))}
             <div ref={messageContainerBottomRef} />
           </div>

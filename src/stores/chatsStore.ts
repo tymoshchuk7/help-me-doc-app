@@ -14,7 +14,8 @@ interface ChatsState {
   loadChats: () => Promise<APIResult<{ chats: Array<ITenantChat & IChatPartner> }>>
   retrieveChat: (
     id: string,
-  ) => Promise<APIResult<{ chat: ITenantChat & IChatPartner, messages: ITenantMessage[] }>>
+  ) => Promise<APIResult<{ chat: ITenantChat & IChatPartner, messages: ITenantMessage[] }>>,
+  markMessageAsRead: (id: string) => Promise<APIResult<{ messages: ITenantMessage[] }>>,
 }
 
 const endpoint = '/chats';
@@ -34,6 +35,10 @@ const useChatsStore = create<ChatsState>(() => ({
   }),
   retrieveChat: (chatId: string) => apiRequest({
     path: `${endpoint}/${chatId}`,
+  }),
+  markMessageAsRead: (messageId: string) => apiRequest({
+    method: 'put',
+    path: `${endpoint}/${messageId}`,
   }),
 }));
 

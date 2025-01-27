@@ -3,6 +3,10 @@
   display: flex;
 }
 
+.d-block {
+  display: block;
+}
+
 .justify-center {
   justify-content: center;
 }
@@ -29,6 +33,14 @@
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.position-absolute {
+  position: absolute;
+}
+
+.position-relative {
+  position: relative;
 }
 
 .min-height-100vh {
@@ -61,7 +73,7 @@
 
 .chat-message {
   color: #000;
-  padding: 10px;
+  padding: 8px 15px 8px 8px;
   border-radius: 10px;
   margin-bottom: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
@@ -69,8 +81,16 @@
 
 .sent-message {
   background-color: #D6F1FF;
+  padding: 8px 15px 8px 8px;
 }
 
 .received-message {
   background-color: #E0E0E0;
+  padding: 8px;
+}
+
+.message-checked {
+  color: #00006f;
+  font-size: 10px;
+  right: 8px;
 }

@@ -11,16 +11,22 @@ interface ChatsState {
   createNewMessage: (
     recipientParticipantId: string, content: string,
   ) => Promise<APIResult<{ chat: ITenantChat }>>,
-  loadChats: () => Promise<APIResult<{ chats: Array<ITenantChat & IChatPartner> }>>
-  retrieveChat: (
-    id: string,
-  ) => Promise<APIResult<{ chat: ITenantChat & IChatPartner, messages: ITenantMessage[] }>>,
+  loadChats: () => Promise<APIResult<{
+    chats: Array<ITenantChat & IChatPartner>,
+    unreadChatsCount: number,
+  }>>
+  retrieveChat: (id: string) => Promise<APIResult<{
+    chat: ITenantChat & IChatPartner,
+    messages: ITenantMessage[],
+  }>>,
   markMessageAsRead: (id: string) => Promise<APIResult<{ messages: ITenantMessage[] }>>,
+  lastMessages: ITenantMessage[],
 }
 
 const endpoint = '/chats';
 
-const useChatsStore = create<ChatsState>(() => ({
+const useChatsStore = create<ChatsState>((set) => ({
+  unreadChatsCount: '0',
   getAvailableContacts: async () => apiRequest({
     path: `${endpoint}/contacts`,
   }),
@@ -30,8 +36,9 @@ const useChatsStore = create<ChatsState>(() => ({
     body: { data: { participantRecipientId, content: encryptionClient.encryptMessage(content) } },
     successToastMessage: 'Message has been sent!',
   }),
-  loadChats: () => apiRequest({
+  loadChats: () => apiRequest<{ lastMessages: ITenantMessage[] }>({
     path: endpoint,
+    onSuccess: (data) => set({ lastMessages: data.lastMessages }),
   }),
   retrieveChat: (chatId: string) => apiRequest({
     path: `${endpoint}/${chatId}`,

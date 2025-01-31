@@ -1,8 +1,11 @@
-import { ReactElement, useState, ReactNode, useMemo } from 'react';
-import { Menu, Layout } from 'antd';
+import {
+  ReactElement, useState, ReactNode,
+  useMemo, useEffect,
+} from 'react';
+import { Menu, Layout, Badge } from 'antd';
 import { ContactsOutlined, MessageOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { useUserStore } from '../../stores';
+import { useUserStore, useChatsStore } from '../../stores';
 import { Permissions, ROLE_PERMISSIONS } from '../../constants';
 
 interface ISidebarItem {
@@ -30,6 +33,42 @@ const allSidebarItems: ISidebarItem[] = [{
   selected: (to, pathname) => pathname.startsWith(to),
 }];
 
+const getSidebarItemId = (name: string) => `sidebar-${name}-item`;
+
+const UnreadMessageCounterBadge = (): ReactElement | null => {
+  const { lastMessages } = useChatsStore();
+  const [badePosition, setBadePosition] = useState<{ top: number, left: number } | null>(null);
+
+  const unreadMessageCount = useMemo(
+    () => lastMessages?.filter((message) => !message.is_read).length,
+    [lastMessages],
+  );
+
+  useEffect(() => {
+    const chatSidebarItem = document.getElementById(getSidebarItemId('Chats'));
+    if (chatSidebarItem) {
+      const itemPosition = chatSidebarItem.getBoundingClientRect();
+      setBadePosition({
+        top: itemPosition.height + 5,
+        left: itemPosition.left + 5,
+      });
+    }
+  }, []);
+
+  return unreadMessageCount && badePosition ? (
+    <div
+      className="position-absolute"
+      style={{
+        top: badePosition.top,
+        left: badePosition.left,
+        zIndex: 5,
+      }}
+    >
+      <Badge count={unreadMessageCount} />
+    </div>
+  ) : null;
+};
+
 const Sidebar = (): ReactElement => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -52,6 +91,7 @@ const Sidebar = (): ReactElement => {
       label: item.label,
       icon: item.icon,
       to: item.to,
+      id: getSidebarItemId(item.key),
     }));
   }, [me?.participant?.role]);
 
@@ -67,6 +107,7 @@ const Sidebar = (): ReactElement => {
       collapsed={collapsed}
       onCollapse={(value) => setCollapsed(value)}
     >
+      <UnreadMessageCounterBadge />
       <Menu
         mode="inline"
         selectedKeys={selectedSidebarItem ? [selectedSidebarItem?.key] : []}

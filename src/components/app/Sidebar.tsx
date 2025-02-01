@@ -64,7 +64,7 @@ const UnreadMessageCounterBadge = (): ReactElement | null => {
         zIndex: 5,
       }}
     >
-      <Badge count={unreadMessageCount} />
+      <Badge count={unreadMessageCount} color="#1668dc" />
     </div>
   ) : null;
 };

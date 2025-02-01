@@ -34,6 +34,20 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
   const scrollToBottom = () => messageContainerBottomRef?.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
+    socketIO?.on('RECEIVE_MESSAGE', (data) => {
+      setMessages((prev) => {
+        const result = [...prev];
+        result.push(JSON.parse(data) as ITenantMessage);
+        return result;
+      });
+    });
+    if (messageContainerRef.current) {
+      messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
+    }
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
     const newMessageId = getLastMessageId(messages);
     if (newMessageId !== lastMessageId) {
       setLastMessageId(newMessageId);
@@ -47,18 +61,6 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
     }
     // eslint-disable-next-line
   }, [messages]);
-
-  useEffect(() => {
-    socketIO?.on('RECEIVE_MESSAGE', (data) => {
-      setMessages((prev) => {
-        const result = [...prev];
-        result.push(JSON.parse(data) as ITenantMessage);
-        return result;
-      });
-    });
-    scrollToBottom();
-    // eslint-disable-next-line
-  }, []);
 
   const onSubmit: FormProps<{ content: string }>['onFinish'] = (values) => {
     const { content } = values;

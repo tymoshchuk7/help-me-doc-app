@@ -10,12 +10,12 @@ const OwnMessage = ({ message }: { message: ITenantMessage }): ReactElement => (
       {encryptionClient.decryptMessage(message.content)}
       <CheckOutlined
         className="d-block position-absolute message-checked"
-        style={{ bottom: '15px' }}
+        style={{ right: 8 }}
       />
       {message.is_read && (
         <CheckOutlined
           className="d-block position-absolute message-checked"
-          style={{ bottom: '15px' }}
+          style={{ right: 5 }}
         />
       )}
     </div>

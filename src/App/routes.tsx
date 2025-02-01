@@ -5,7 +5,9 @@ import {
 } from 'react-router-dom';
 import { useAuth, SocketIOProvider } from '../contexts';
 import { useAsyncEffect, useHasPermissions } from '../hooks';
-import { useUserStore, useInvitationsStore } from '../stores';
+import {
+  useUserStore, useInvitationsStore, useChatsStore,
+} from '../stores';
 import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
@@ -19,6 +21,7 @@ const AuthenticatedRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();
   const navigate = useNavigate();
   const { me, getMe } = useUserStore();
+  const { loadChats } = useChatsStore();
   const { preservedInvitation, acceptInvitation } = useInvitationsStore();
   const [onLoading, setOnLoading] = useState(true);
 
@@ -29,6 +32,7 @@ const AuthenticatedRoute = (): ReactElement => {
       }
       if (!me) {
         const { data } = await getMe();
+        await loadChats();
         if (data?.user) {
           if (!data.user.default_tenant) {
             navigate(AppRouteNames.createTenant);

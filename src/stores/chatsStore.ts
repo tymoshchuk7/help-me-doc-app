@@ -21,6 +21,7 @@ interface ChatsState {
   }>>,
   markMessageAsRead: (id: string) => Promise<APIResult<{ messages: ITenantMessage[] }>>,
   lastMessages: ITenantMessage[],
+  chats: Array<ITenantChat & IChatPartner>,
 }
 
 const endpoint = '/chats';
@@ -36,9 +37,13 @@ const useChatsStore = create<ChatsState>((set) => ({
     body: { data: { participantRecipientId, content: encryptionClient.encryptMessage(content) } },
     successToastMessage: 'Message has been sent!',
   }),
-  loadChats: () => apiRequest<{ lastMessages: ITenantMessage[] }>({
+  // eslint-disable-next-line max-len
+  loadChats: () => apiRequest<{ lastMessages: ITenantMessage[], chats: Array<ITenantChat & IChatPartner> }>({
     path: endpoint,
-    onSuccess: (data) => set({ lastMessages: data.lastMessages }),
+    onSuccess: (data) => set({
+      chats: data.chats,
+      lastMessages: data.lastMessages,
+    }),
   }),
   retrieveChat: (chatId: string) => apiRequest({
     path: `${endpoint}/${chatId}`,

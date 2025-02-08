@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import {
   ReactElement, createContext, useContext,
   useEffect, useState,
@@ -16,12 +17,25 @@ interface ISocketIOContext {
   ready: boolean,
 }
 
-interface INotification {
-  type: string,
-  title: string,
-  description: string,
-  attributes: object,
+enum NotificationType {
+  MessageNotification = 'MESSAGE_NOTIFICATION',
 }
+
+interface IMessageNotificationAttributes {
+  chatId: string;
+}
+
+interface IDefaultNotification<T = string, A = object> {
+  type: T;
+  title: string;
+  description: string;
+  attributes: A;
+}
+
+// eslint-disable-next-line max-len
+type IMessageNotification = IDefaultNotification<NotificationType.MessageNotification, IMessageNotificationAttributes>;
+
+type INotification = IMessageNotification | IDefaultNotification;
 
 const SocketIOContext = createContext({} as ISocketIOContext);
 
@@ -38,9 +52,9 @@ export const SocketIOProvider = (): ReactElement => {
   const handleNotification = (notificationJSON: string) => {
     const notification: INotification = JSON.parse(notificationJSON);
     switch (notification.type) {
-      case 'MESSAGE_NOTIFICATION':
-        // eslint-disable-next-line no-case-declarations
-        const chatPath = AppRouteNames.chat.replace(':id', notification.attributes.chatId);
+      case NotificationType.MessageNotification:
+        const { chatId } = notification.attributes as IMessageNotificationAttributes;
+        const chatPath = AppRouteNames.chat.replace(':id', chatId);
         // TODO do not show toast for current chat
         toast(notification.title, { onClick: () => navigate(chatPath), type: 'info' });
         return loadChats();

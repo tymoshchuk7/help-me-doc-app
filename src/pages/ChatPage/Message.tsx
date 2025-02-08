@@ -46,9 +46,9 @@ const Message = ({ chat, message }: Props): ReactElement => {
         threshold: 1.0,
       });
       const target = document.querySelector(`#chat-message-${message.id}`);
-      observer.observe(target);
+      observer.observe(target!);
       return () => {
-        observer.unobserve(target);
+        observer.unobserve(target!);
       };
     }
     return () => {};

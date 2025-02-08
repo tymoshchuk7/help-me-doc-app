@@ -39,10 +39,12 @@ const UnreadMessageCounterBadge = (): ReactElement | null => {
   const { lastMessages } = useChatsStore();
   const [badePosition, setBadePosition] = useState<{ top: number, left: number } | null>(null);
 
-  const unreadMessageCount = useMemo(
-    () => Object.values(lastMessages).filter((message) => !message.is_read).length,
-    [lastMessages],
-  );
+  const unreadMessageCount = useMemo(() => {
+    const unreadMessagesChatIds = Object.values(lastMessages)
+      .filter((message) => !message.is_read)
+      .map((message) => message.chat_id);
+    return new Set(unreadMessagesChatIds).size;
+  }, [lastMessages]);
 
   useEffect(() => {
     const chatSidebarItem = document.getElementById(getSidebarItemId('Chats'));

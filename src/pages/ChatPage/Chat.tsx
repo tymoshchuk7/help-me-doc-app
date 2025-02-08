@@ -41,6 +41,15 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
         return result;
       });
     });
+    socketIO?.on('RECEIVE_MESSAGE_UPDATE', (data) => {
+      setMessages((prev) => {
+        const updatedMessage = JSON.parse(data) as ITenantMessage;
+        const messageIndex = prev.findIndex((message) => message.id === updatedMessage.id);
+        const result = [...prev];
+        result[messageIndex] = updatedMessage;
+        return result;
+      });
+    });
     if (messageContainerRef.current) {
       messageContainerRef.current.scrollTop = messageContainerRef.current.scrollHeight;
     }

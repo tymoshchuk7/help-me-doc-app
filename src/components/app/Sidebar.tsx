@@ -40,7 +40,7 @@ const UnreadMessageCounterBadge = (): ReactElement | null => {
   const [badePosition, setBadePosition] = useState<{ top: number, left: number } | null>(null);
 
   const unreadMessageCount = useMemo(
-    () => lastMessages?.filter((message) => !message.is_read).length,
+    () => Object.values(lastMessages).filter((message) => !message.is_read).length,
     [lastMessages],
   );
 

@@ -3,12 +3,9 @@ import {
   useEffect, useState,
 } from 'react';
 import { io, Socket } from 'socket.io-client';
-import {
-  useLocation, useNavigate, Location, NavigateFunction,
-  Outlet,
-} from 'react-router-dom';
+import { useNavigate, Outlet } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import { useAppStore, useUserStore } from '../stores';
+import { useAppStore, useUserStore, useChatsStore } from '../stores';
 import { AppRouteNames } from '../constants';
 
 interface ISocketIOContext {
@@ -30,31 +27,27 @@ const SocketIOContext = createContext({} as ISocketIOContext);
 
 export const useSocketIO = () => useContext<ISocketIOContext>(SocketIOContext);
 
-const handleNotification = (
-  notificationJSON: string,
-  location: Location,
-  navigate: NavigateFunction,
-) => {
-  const notification: INotification = JSON.parse(notificationJSON);
-  switch (notification.type) {
-    case 'MESSAGE_NOTIFICATION':
-      // eslint-disable-next-line no-case-declarations
-      const chatPath = AppRouteNames.chat.replace(':id', notification.attributes.chatId);
-      // TODO do not show toast for current chat
-      toast(notification.title, { onClick: () => navigate(chatPath), type: 'info' });
-      break;
-    default:
-      break;
-  }
-};
-
 export const SocketIOProvider = (): ReactElement => {
   const { token } = useAppStore();
   const { me } = useUserStore();
-  const location = useLocation();
+  const { loadChats } = useChatsStore();
   const navigate = useNavigate();
   const [socketIO, setSocketIO] = useState<Socket | null>(null);
   const [ready, setReady] = useState(false);
+
+  const handleNotification = (notificationJSON: string) => {
+    const notification: INotification = JSON.parse(notificationJSON);
+    switch (notification.type) {
+      case 'MESSAGE_NOTIFICATION':
+        // eslint-disable-next-line no-case-declarations
+        const chatPath = AppRouteNames.chat.replace(':id', notification.attributes.chatId);
+        // TODO do not show toast for current chat
+        toast(notification.title, { onClick: () => navigate(chatPath), type: 'info' });
+        return loadChats();
+      default:
+        return () => {};
+    }
+  };
 
   useEffect(() => {
     if (token && me?.participant?.id && me?.default_tenant) {
@@ -66,7 +59,7 @@ export const SocketIOProvider = (): ReactElement => {
         },
         transports: ['websocket'],
       });
-      socket.on('NOTIFICATION', (notification) => handleNotification(notification, location, navigate));
+      socket.on('NOTIFICATION', (notification) => handleNotification(notification));
       socket.on('READY', () => setReady(true));
       setSocketIO(socket);
     }

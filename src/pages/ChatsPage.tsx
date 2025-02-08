@@ -1,10 +1,10 @@
+/* eslint-disable arrow-body-style */
 import { ReactElement, useMemo } from 'react';
 import { Typography, Skeleton } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { useChatsStore } from '../stores';
 import { useDispatchPromise } from '../hooks';
 import { ChatCard, Resolve } from '../components';
-import { ITenantChat, IChatPartner } from '../types';
 
 const { Title } = Typography;
 
@@ -13,14 +13,17 @@ const skeletonArray = new Array(5).fill(0);
 const ChatsPage = (): ReactElement => {
   const { chats, lastMessages } = useChatsStore();
 
-  const lastMessagesMap = useMemo(
-    () => Object.fromEntries(lastMessages.map((message) => [message.chat_id, message])),
-    [lastMessages],
-  );
+  const allUserChats = useMemo(() => Object.values(chats), [chats]);
+
+  const lastMessagesMap = useMemo(() => {
+    return Object.fromEntries(
+      Object.values(lastMessages).map((message) => [message.chat_id, message]),
+    );
+  }, [lastMessages]);
 
   return (
     <div>
-      {chats?.length !== 0 ? chats.map((chat: ITenantChat & IChatPartner) => (
+      {allUserChats.length !== 0 ? allUserChats.map((chat) => (
         <NavLink key={`chat-${chat.id}`} to={`/chats/${chat.id}`}>
           <ChatCard
             avatarSrc={chat.chat_partner_avatar}

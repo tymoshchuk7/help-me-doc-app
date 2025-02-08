@@ -40,7 +40,7 @@ const Message = ({ chat, message }: Props): ReactElement => {
   const { markMessageAsRead } = useChatsStore();
 
   useEffect(() => {
-    if (!ownMessage) {
+    if (!ownMessage && !message.is_read) {
       const observer = new IntersectionObserver(() => markMessageAsRead(message.id), {
         rootMargin: '0px',
         threshold: 1.0,

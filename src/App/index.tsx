@@ -1,9 +1,7 @@
 import { RouterProvider } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
 import { router } from './routes';
-import {
-  AuthControllerProvider, SocketIOProvider, ThemeProvider,
-} from '../contexts';
+import { AuthControllerProvider, ThemeProvider } from '../contexts';
 
 import 'react-toastify/dist/ReactToastify.css';
 import './index.css';
@@ -13,11 +11,9 @@ function App() {
   return (
     <>
       <AuthControllerProvider>
-        <SocketIOProvider>
-          <ThemeProvider>
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </SocketIOProvider>
+        <ThemeProvider>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </AuthControllerProvider>
       <ToastContainer />
     </>

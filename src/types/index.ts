@@ -57,6 +57,7 @@ export interface ITenantMessage {
   sent_timestamp: string,
   participant_id: string
   user_id: string,
+  is_read: boolean,
 }
 
 export interface ITenantDisease {

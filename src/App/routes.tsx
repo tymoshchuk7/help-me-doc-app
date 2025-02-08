@@ -3,9 +3,11 @@ import { ReactElement, useState } from 'react';
 import {
   createBrowserRouter, Navigate, Outlet, useNavigate,
 } from 'react-router-dom';
-import { useAuth } from '../contexts';
+import { useAuth, SocketIOProvider } from '../contexts';
 import { useAsyncEffect, useHasPermissions } from '../hooks';
-import { useUserStore, useInvitationsStore } from '../stores';
+import {
+  useUserStore, useInvitationsStore, useChatsStore,
+} from '../stores';
 import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
@@ -19,6 +21,7 @@ const AuthenticatedRoute = (): ReactElement => {
   const { isAuthorized, onLogOut } = useAuth();
   const navigate = useNavigate();
   const { me, getMe } = useUserStore();
+  const { loadChats } = useChatsStore();
   const { preservedInvitation, acceptInvitation } = useInvitationsStore();
   const [onLoading, setOnLoading] = useState(true);
 
@@ -29,6 +32,7 @@ const AuthenticatedRoute = (): ReactElement => {
       }
       if (!me) {
         const { data } = await getMe();
+        await loadChats();
         if (data?.user) {
           if (!data.user.default_tenant) {
             navigate(AppRouteNames.createTenant);
@@ -57,69 +61,74 @@ const RestrictedPermissionsRoute = (
 
 export const router = createBrowserRouter([
   {
-    Component: ErrorBoundary,
+    element: <SocketIOProvider />,
     children: [
       {
-        path: AppRouteNames.authCallback,
-        Component: AuthCallbackPage,
-      },
-      {
-        path: AppRouteNames.login,
-        Component: LoginPage,
-      },
-      {
-        path: AppRouteNames.signup,
-        Component: SignUpPage,
-      },
-      {
-        path: AppRouteNames.changePassword,
-        Component: ChangePasswordPage,
-      },
-      {
-        path: AppRouteNames.invitationCallback,
-        Component: InvitationCallbackPage,
-      },
-      {
-        element: <AuthenticatedRoute />,
+        Component: ErrorBoundary,
         children: [
           {
-            path: AppRouteNames.createTenant,
-            Component: CreateTenantPage,
+            path: AppRouteNames.authCallback,
+            Component: AuthCallbackPage,
           },
           {
-            element: <AppPageLayout />,
+            path: AppRouteNames.login,
+            Component: LoginPage,
+          },
+          {
+            path: AppRouteNames.signup,
+            Component: SignUpPage,
+          },
+          {
+            path: AppRouteNames.changePassword,
+            Component: ChangePasswordPage,
+          },
+          {
+            path: AppRouteNames.invitationCallback,
+            Component: InvitationCallbackPage,
+          },
+          {
+            element: <AuthenticatedRoute />,
             children: [
               {
-                path: AppRouteNames.dashboard,
-                Component: DashboardPage,
+                path: AppRouteNames.createTenant,
+                Component: CreateTenantPage,
               },
               {
-                path: AppRouteNames.chats,
-                element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+                element: <AppPageLayout />,
                 children: [
                   {
-                    index: true,
-                    element: <ChatsPage />,
+                    path: AppRouteNames.dashboard,
+                    Component: DashboardPage,
                   },
-                ],
-              },
-              {
-                path: AppRouteNames.chat,
-                element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
-                children: [
                   {
-                    index: true,
-                    element: <ChatPage />,
+                    path: AppRouteNames.chats,
+                    element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+                    children: [
+                      {
+                        index: true,
+                        element: <ChatsPage />,
+                      },
+                    ],
+                  },
+                  {
+                    path: AppRouteNames.chat,
+                    element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_SEND_MESSAGES]} />,
+                    children: [
+                      {
+                        index: true,
+                        element: <ChatPage />,
+                      },
+                    ],
                   },
                 ],
               },
             ],
           },
+          {
+            path: '*',
+            Component: Page404,
+          },
         ],
-      },
-      {
-        path: '*',
-        Component: Page404,
       },
     ],
   },

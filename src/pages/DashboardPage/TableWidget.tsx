@@ -1,4 +1,5 @@
 import { ReactElement, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { useDispatchPromise } from '../../hooks';
@@ -68,6 +69,11 @@ const diseaseTableColumns: TableColumnsType<DiseaseDataType> = [
     dataIndex: 'treatment',
     ellipsis: true,
     width: '25%',
+  },
+  {
+    title: '',
+    dataIndex: '__CONTROL__',
+    render: (_, record) => <Link to={`/disease/${record.id}`}>Update</Link>,
   },
 ];
 

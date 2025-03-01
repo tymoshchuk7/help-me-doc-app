@@ -12,7 +12,7 @@ import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
-  Page404, ChatsPage, ChatPage,
+  Page404, ChatsPage, ChatPage, DiseasePage,
 } from '../pages';
 import { Loader, AppPageLayout } from '../components';
 import ErrorBoundary from './ErrorBoundary';
@@ -117,6 +117,16 @@ export const router = createBrowserRouter([
                       {
                         index: true,
                         element: <ChatPage />,
+                      },
+                    ],
+                  },
+                  {
+                    path: AppRouteNames.disease,
+                    element: <RestrictedPermissionsRoute permissions={[]} />,
+                    children: [
+                      {
+                        index: true,
+                        element: <DiseasePage />,
                       },
                     ],
                   },

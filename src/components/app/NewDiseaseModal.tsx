@@ -6,6 +6,7 @@ import {
 import { useDispatchPromise } from '../../hooks';
 import { useDiseasesStore, useParticipantsStore } from '../../stores';
 import { diseaseValidator } from '../../validators';
+import { DISEASES_STATUSES } from '../../constants';
 import { ITenantParticipant, IUser, ITenantDisease } from '../../types';
 import Resolve from '../helpers/Resolve';
 import Select from '../controls/Select';
@@ -20,12 +21,6 @@ interface Props {
 }
 
 type TForm = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
-
-const diseaseStatuses = [
-  { value: 'active', label: 'Active' },
-  { value: 'resolved', label: 'Resolved' },
-  { value: 'chronic', label: 'Chronic' },
-];
 
 const ModalBody = ({ closeModal }: { closeModal: () => void }): ReactElement => {
   const { createDisease } = useDiseasesStore();
@@ -84,7 +79,7 @@ const ModalBody = ({ closeModal }: { closeModal: () => void }): ReactElement => 
             rules={diseaseValidator.status}
             label="Status"
           >
-            {diseaseStatuses.map((option) => (
+            {DISEASES_STATUSES.map((option) => (
               <Option key={`disease-status-${option.value}`} value={option.value}>
                 {option.label}
               </Option>

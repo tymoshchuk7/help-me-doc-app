@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiRequest } from './apiRequest';
+import { apiRequest, mergeDataIntoStore } from './helpers';
 import { encryptionClient } from '../helpers';
 import {
   APIResult, ITenantParticipant, IUser, ITenantChat,
@@ -23,12 +23,6 @@ interface ChatsState {
   lastMessages: Record<string, ITenantMessage>,
   chats: Record<string, ITenantChat & IChatPartner>,
 }
-
-// eslint-disable-next-line max-len
-const mergeDataIntoStore = (initialData: Record<string, any>, incomingData: Array<{ id: string }>) => {
-  const changes = Object.fromEntries(incomingData.map((i) => [i.id, i]));
-  return { ...initialData, ...changes };
-};
 
 const endpoint = '/chats';
 

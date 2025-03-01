@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiRequest } from './apiRequest';
+import { apiRequest, mergeDataIntoStore } from './helpers';
 import { APIResult, ITenantDisease } from '../types';
 
 type CreateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
@@ -14,12 +14,6 @@ interface DiseasesState {
 }
 
 const endpoint = '/diseases';
-
-// eslint-disable-next-line max-len
-const mergeDataIntoStore = (initialData: Record<string, any>, incomingData: Array<{ id: string }>) => {
-  const changes = Object.fromEntries(incomingData.map((i) => [i.id, i]));
-  return { ...initialData, ...changes };
-};
 
 const useDiseasesStore = create<DiseasesState>((setState, getState) => ({
   diseases: {},

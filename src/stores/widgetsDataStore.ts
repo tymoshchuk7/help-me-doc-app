@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiRequest } from './apiRequest';
+import { apiRequest } from './helpers';
 import { ITenantDisease, APIResult } from '../types';
 
 interface WidgetsDataState {

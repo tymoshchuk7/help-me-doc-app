@@ -54,3 +54,11 @@ export const apiRequest = async <R extends Record<string, any>>({
     return { hasError: true, error };
   }
 };
+
+export const mergeDataIntoStore = (
+  initialData: Record<string, any>,
+  incomingData: Array<{ id: string }>,
+) => {
+  const changes = Object.fromEntries(incomingData.map((i) => [i.id, i]));
+  return { ...initialData, ...changes };
+};

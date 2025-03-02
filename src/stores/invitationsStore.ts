@@ -1,11 +1,13 @@
 import { create } from 'zustand';
-import { apiRequest } from './apiRequest';
-import { APIResult, IInvitation } from '../types';
+import { apiRequest } from './helpers';
+import { APIResult, IInvitation, CreateInvitationDTO } from '../types';
 
 interface InvitationsState {
   data: Record<string, IInvitation>,
   preservedInvitation: IInvitation | null,
-  createInvitation: (data: Pick<IInvitation, 'email' | 'role'>) => Promise<APIResult<{ invitations: IInvitation[] }>>,
+  createInvitation: (
+    data: CreateInvitationDTO,
+  ) => Promise<APIResult<{ invitations: IInvitation[] }>>,
   getTenantInvitations: () => Promise<APIResult<{ invitations: IInvitation[] }>>,
   retrieveInvitation: (id: string) => Promise<APIResult<{ invitation: IInvitation }>>,
   acceptInvitation: (id: string) => Promise<APIResult<{}>>,
@@ -34,7 +36,9 @@ const clearPreservedInvitation = () => window.sessionStorage.removeItem(invitati
 const useInvitationsStore = create<InvitationsState>((set) => ({
   data: {},
   preservedInvitation: getPreservedInvitation(),
-  createInvitation: async (data: Pick<IInvitation, 'email' | 'role'>) => apiRequest<{ invitations: IInvitation[] }>({
+  createInvitation: async (
+    data: CreateInvitationDTO,
+  ) => apiRequest<{ invitations: IInvitation[] }>({
     path: endpoint,
     body: { data },
     method: 'post',

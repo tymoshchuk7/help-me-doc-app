@@ -1,14 +1,17 @@
 import { ReactElement, useMemo } from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { useDispatchPromise } from '../../hooks';
 import { useWidgetsDataStore, useUserStore } from '../../stores';
 import { Resolve } from '../../components';
+import { AppRouteNames } from '../../constants';
 
 const { Title } = Typography;
 
 interface DiseaseDataType {
   key: React.Key;
+  id: string,
   name: string;
   status: string;
   description: number;
@@ -24,8 +27,6 @@ interface ParticipantDataType {
   phone_number: string;
   description: string;
 }
-
-// columns patient, name, description,  status, treatment
 
 const patientColumn = {
   title: 'Patient',
@@ -68,6 +69,11 @@ const diseaseTableColumns: TableColumnsType<DiseaseDataType> = [
     dataIndex: 'treatment',
     ellipsis: true,
     width: '25%',
+  },
+  {
+    title: '',
+    dataIndex: '__CONTROL__',
+    render: (_, record) => <Link to={AppRouteNames.disease.replace(':id', record.id)}>View</Link>,
   },
 ];
 

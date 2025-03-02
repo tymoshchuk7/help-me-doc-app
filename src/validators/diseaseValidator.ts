@@ -1,9 +1,7 @@
 import { Rule } from 'antd/lib/form';
-import { ITenantDisease } from '../types';
+import { CreateDiseaseDTO } from '../types';
 
-type ValidatorKey = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
-
-export const diseaseValidator: Record<keyof ValidatorKey, Rule[]> = {
+export const diseaseValidator: Record<keyof CreateDiseaseDTO, Rule[]> = {
   name: [{
     required: true,
     message: 'Please pass disease name.',

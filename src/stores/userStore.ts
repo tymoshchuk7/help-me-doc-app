@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { apiRequest } from './apiRequest';
+import { apiRequest } from './helpers';
 import { IUser, APIResult } from '../types';
 
 interface UserState {

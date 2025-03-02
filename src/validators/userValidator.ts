@@ -1,9 +1,7 @@
 import { Rule } from 'antd/lib/form';
-import { IUser } from '../types';
+import { RegisterUserDTO } from '../types';
 
-type ValidatorKey = keyof Pick<IUser, 'email' | 'first_name' | 'last_name' | 'password'>;
-
-export const userValidator: Record<ValidatorKey, Rule[]> = {
+export const userValidator: Record<keyof RegisterUserDTO, Rule[]> = {
   email: [{ required: true, type: 'email', message: 'Please enter your email address.' }],
   first_name: [{
     required: true,

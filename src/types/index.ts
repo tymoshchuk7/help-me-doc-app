@@ -13,6 +13,9 @@ export interface IUser {
   participant?: Pick<ITenantParticipant, 'role' | 'status' | 'id'>
 }
 
+export type RegisterUserDTO = Pick<IUser, 'email' | 'first_name' | 'last_name' | 'password'>;
+export type LoginUserDTO = Pick<RegisterUserDTO, 'email' | 'password'>;
+
 export interface ITenant {
   name: string,
 }
@@ -22,6 +25,8 @@ export interface IInvitation {
   email: string,
   role: string,
 }
+
+export type CreateInvitationDTO = Pick<IInvitation, 'email' | 'role'>;
 
 export interface APIResult<R> {
   hasError: boolean,
@@ -69,3 +74,6 @@ export interface ITenantDisease {
   description: string,
   treatment: string,
 }
+
+export type CreateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
+export type UpdateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description'>;

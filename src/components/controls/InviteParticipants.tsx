@@ -1,7 +1,11 @@
 import { ReactElement } from 'react';
-import { Button, Form, Select as AntdSelect } from 'antd';
+import {
+  Button, Form, FormProps,
+  Select as AntdSelect,
+} from 'antd';
 import { useInvitationsStore } from '../../stores';
 import { invitationValidator } from '../../validators';
+import { CreateInvitationDTO } from '../../types';
 import Input from './Input';
 import Select from './Select';
 
@@ -24,7 +28,7 @@ const InviteParticipant = (): ReactElement => {
     form.resetFields();
   };
 
-  const onFinish = async (data: { email: string, role: string }) => {
+  const onFinish: FormProps<CreateInvitationDTO>['onFinish'] = async (data) => {
     const { hasError } = await createInvitation(data);
     if (!hasError) {
       onReset();

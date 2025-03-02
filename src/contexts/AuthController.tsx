@@ -6,11 +6,11 @@ import {
 import { WebAuth } from 'auth0-js';
 import { AUTH_TOKEN_KEY } from '../constants';
 import { useAppStore } from '../stores';
-import { IUser } from '../types';
+import { RegisterUserDTO, LoginUserDTO } from '../types';
 
 interface IAuthController {
-  onSignUp: (user: Pick<IUser, 'email' | 'password' | 'last_name' | 'first_name'>) => Promise<unknown>,
-  onLogin: (user: Pick<IUser, 'email' | 'password'>) => Promise<unknown>,
+  onSignUp: (user: RegisterUserDTO) => Promise<unknown>,
+  onLogin: (user: LoginUserDTO) => Promise<unknown>,
   onLogOut: () => void,
   onGoogleSignIn: () => void,
   onChangePassword: (email: string) => Promise<unknown>,
@@ -48,7 +48,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
 
   const onSignUp: IAuthController['onSignUp'] = useCallback(({
     email, password, first_name, last_name,
-  }: Pick<IUser, 'email' | 'password' | 'last_name' | 'first_name'>) => new Promise((resolve, reject) => {
+  }: RegisterUserDTO) => new Promise((resolve, reject) => {
     auth0.signup({
       email,
       password,
@@ -67,7 +67,7 @@ export const AuthControllerProvider = ({ children }: { children: ReactNode }): R
 
   const onLogin = useCallback(({
     email, password,
-  }: Pick<IUser, 'email' | 'password'>) => new Promise((resolve, reject) => {
+  }: LoginUserDTO) => new Promise((resolve, reject) => {
     auth0.login({
       email,
       password,

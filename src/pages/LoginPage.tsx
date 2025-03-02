@@ -4,19 +4,17 @@ import { Button, Form, FormProps, Divider } from 'antd';
 import { Link } from 'react-router-dom';
 import GoogleButton from 'react-google-button';
 import { userValidator } from '../validators';
-import { IUser } from '../types';
+import { LoginUserDTO } from '../types';
 import { useAuth } from '../contexts';
 import { AuthPageLayout, Input } from '../components';
 
-type TForm = Pick<IUser, 'email' | 'password'>;
-
 const LoginPage = (): ReactElement => {
   const { onLogin, onGoogleSignIn } = useAuth();
-  const [form] = Form.useForm<TForm>();
+  const [form] = Form.useForm<LoginUserDTO>();
   const [error, setError] = useState<null | Auth0Error>(null);
   const [loading, setLoading] = useState(false);
 
-  const onSubmit: FormProps<TForm>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<LoginUserDTO>['onFinish'] = async (values) => {
     const { email, password } = values;
     try {
       setLoading(true);

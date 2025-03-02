@@ -1,9 +1,9 @@
 import { create } from 'zustand';
 import { apiRequest, mergeDataIntoStore } from './helpers';
-import { APIResult, ITenantDisease } from '../types';
-
-type CreateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
-type UpdateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description'>;
+import {
+  APIResult, ITenantDisease, UpdateDiseaseDTO,
+  CreateDiseaseDTO,
+} from '../types';
 
 interface DiseasesState {
   diseases: Record<string, ITenantDisease>,

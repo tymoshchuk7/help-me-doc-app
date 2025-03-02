@@ -7,7 +7,7 @@ import { useDispatchPromise } from '../../hooks';
 import { useDiseasesStore, useParticipantsStore } from '../../stores';
 import { diseaseValidator } from '../../validators';
 import { DISEASES_STATUSES } from '../../constants';
-import { ITenantParticipant, IUser, ITenantDisease } from '../../types';
+import { ITenantParticipant, IUser, CreateDiseaseDTO } from '../../types';
 import Resolve from '../helpers/Resolve';
 import Select from '../controls/Select';
 import TextArea from '../controls/TextArea';
@@ -20,17 +20,15 @@ interface Props {
   closeModal: () => void,
 }
 
-type TForm = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
-
 const ModalBody = ({ closeModal }: { closeModal: () => void }): ReactElement => {
   const { createDisease } = useDiseasesStore();
   const { loadParticipants } = useParticipantsStore();
   const loadParticipantsPromise = useDispatchPromise(loadParticipants);
-  const [form] = Form.useForm<TForm>();
+  const [form] = Form.useForm<CreateDiseaseDTO>();
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<null | undefined | Error>(null);
 
-  const onSubmit: FormProps<TForm>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<CreateDiseaseDTO>['onFinish'] = async (values) => {
     try {
       setLoading(true);
       const { hasError } = await createDisease({ ...values });

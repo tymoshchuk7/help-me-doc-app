@@ -6,17 +6,15 @@ import GoogleButton from 'react-google-button';
 import { useAuth } from '../contexts';
 import { userValidator } from '../validators';
 import { useInvitationsStore } from '../stores';
-import { IUser } from '../types';
+import { RegisterUserDTO } from '../types';
 import { AppRouteNames } from '../constants';
 import { AuthPageLayout, Input } from '../components';
-
-type TForm = Pick<IUser, 'email' | 'last_name' | 'first_name' | 'password'>;
 
 const SignUpPage = (): ReactElement => {
   const { onSignUp, onGoogleSignIn } = useAuth();
   const { preservedInvitation } = useInvitationsStore();
   const navigate = useNavigate();
-  const [form] = Form.useForm<TForm>();
+  const [form] = Form.useForm<RegisterUserDTO>();
   const [error, setError] = useState<null | Auth0Error>(null);
   const [loading, setLoading] = useState(false);
 
@@ -25,7 +23,7 @@ const SignUpPage = (): ReactElement => {
     // eslint-disable-next-line
   }, []);
 
-  const onSubmit: FormProps<TForm>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<RegisterUserDTO>['onFinish'] = async (values) => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const { email, password, first_name, last_name } = values;
     try {

@@ -7,13 +7,11 @@ import {
 import { useDispatchPromise } from '../hooks';
 import { useDiseasesStore, useUserStore } from '../stores';
 import { diseaseValidator } from '../validators';
-import { ITenantDisease } from '../types';
+import { UpdateDiseaseDTO } from '../types';
 import { DISEASES_STATUSES } from '../constants';
 import { Select, Input, TextArea, Resolve } from '../components';
 
 const { Option } = AntdSelect;
-
-type TForm = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
 
 const DiseasePage = (): ReactElement => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +19,7 @@ const DiseasePage = (): ReactElement => {
   const { me } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<null | undefined | Error>(null);
-  const [form] = Form.useForm<TForm>();
+  const [form] = Form.useForm<UpdateDiseaseDTO>();
 
   const disease = useMemo(() => diseases[id!], [diseases, id]);
   const formDisabled = useMemo(
@@ -29,7 +27,7 @@ const DiseasePage = (): ReactElement => {
     [disease, me],
   );
 
-  const onSubmit: FormProps<TForm>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<UpdateDiseaseDTO>['onFinish'] = async (values) => {
     try {
       setLoading(true);
       await updateDisease(id!, values);

@@ -1,9 +1,7 @@
 import { Rule } from 'antd/lib/form';
-import { IInvitation } from '../types';
+import { CreateInvitationDTO } from '../types';
 
-type ValidatorKey = keyof Pick<IInvitation, 'email' | 'role'>;
-
-export const invitationValidator: Record<ValidatorKey, Rule[]> = {
+export const invitationValidator: Record<keyof CreateInvitationDTO, Rule[]> = {
   email: [{
     required: true,
     type: 'email',

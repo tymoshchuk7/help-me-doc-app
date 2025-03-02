@@ -10,7 +10,10 @@ interface DiseasesState {
   loadDiseases: () => Promise<APIResult<{ diseases: ITenantDisease[] }>>,
   retrieveDisease: (id: string) => Promise<APIResult<{ disease: ITenantDisease }>>,
   createDisease: (disease: CreateDiseaseDTO) => Promise<APIResult<{ disease: ITenantDisease }>>,
-  updateDisease: (id, disease: UpdateDiseaseDTO) => Promise<APIResult<{ disease: ITenantDisease }>>
+  updateDisease: (
+    id: string,
+    disease: UpdateDiseaseDTO,
+  ) => Promise<APIResult<{ disease: ITenantDisease }>>
 }
 
 const endpoint = '/diseases';
@@ -43,7 +46,10 @@ const useDiseasesStore = create<DiseasesState>((setState, getState) => ({
     method: 'post',
     successToastMessage: 'Disease has been created',
   }),
-  updateDisease: async (id, disease: UpdateDiseaseDTO) => apiRequest<{ disease: ITenantDisease }>({
+  updateDisease: async (
+    id: string,
+    disease: UpdateDiseaseDTO,
+  ) => apiRequest<{ disease: ITenantDisease }>({
     path: `${endpoint}/${id}`,
     body: { data: { ...disease } },
     method: 'put',

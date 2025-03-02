@@ -122,7 +122,7 @@ export const router = createBrowserRouter([
                   },
                   {
                     path: AppRouteNames.disease,
-                    element: <RestrictedPermissionsRoute permissions={[]} />,
+                    element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_VIEW_DISEASES]} />,
                     children: [
                       {
                         index: true,

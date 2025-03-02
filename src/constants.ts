@@ -37,6 +37,7 @@ export const ROLE_PERMISSIONS: Record<TRole, Set<Permissions>> = {
   ]),
   patient: new Set([
     Permissions.CAN_SEND_MESSAGES,
+    Permissions.CAN_VIEW_DISEASES,
   ]),
   doctor: new Set([
     Permissions.CAN_SEND_MESSAGES,

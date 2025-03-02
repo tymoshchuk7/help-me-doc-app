@@ -10,6 +10,7 @@ const { Title } = Typography;
 
 interface DiseaseDataType {
   key: React.Key;
+  id: string,
   name: string;
   status: string;
   description: number;

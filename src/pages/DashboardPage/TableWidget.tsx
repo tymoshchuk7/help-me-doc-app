@@ -5,6 +5,7 @@ import type { TableColumnsType } from 'antd';
 import { useDispatchPromise } from '../../hooks';
 import { useWidgetsDataStore, useUserStore } from '../../stores';
 import { Resolve } from '../../components';
+import { AppRouteNames } from '../../constants';
 
 const { Title } = Typography;
 
@@ -26,8 +27,6 @@ interface ParticipantDataType {
   phone_number: string;
   description: string;
 }
-
-// columns patient, name, description,  status, treatment
 
 const patientColumn = {
   title: 'Patient',
@@ -74,7 +73,7 @@ const diseaseTableColumns: TableColumnsType<DiseaseDataType> = [
   {
     title: '',
     dataIndex: '__CONTROL__',
-    render: (_, record) => <Link to={`/disease/${record.id}`}>Update</Link>,
+    render: (_, record) => <Link to={AppRouteNames.disease.replace(':id', record.id)}>View</Link>,
   },
 ];
 

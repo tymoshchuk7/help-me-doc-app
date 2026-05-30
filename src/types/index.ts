@@ -77,3 +77,15 @@ export interface ITenantDisease {
 
 export type CreateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description' | 'patient_participant_id'>;
 export type UpdateDiseaseDTO = Pick<ITenantDisease, 'name' | 'treatment' | 'status' | 'description'>;
+
+export interface ITenantAppointment {
+  id: string,
+  doctor_participant_id: string,
+  patient_participant_id: string,
+  patient_full_name: string,
+  scheduled_at: string,
+  status: 'pending' | 'completed' | 'confirmed' | 'cancelled',
+}
+
+export type CreateAppointmentDTO = Pick<ITenantAppointment, 'scheduled_at' | 'patient_participant_id'>;
+export type UpdateAppointmentDTO = Pick<ITenantAppointment, 'status'>;

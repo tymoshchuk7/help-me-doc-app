@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
-import { MessageOutlined, MoreOutlined, FileAddOutlined } from '@ant-design/icons';
+import { MessageOutlined, MoreOutlined, FileAddOutlined, CalendarOutlined } from '@ant-design/icons';
 import { FloatButton } from 'antd';
 import { useHasPermissions } from '../../hooks';
 import { Permissions } from '../../constants';
 
-export type ModalType = 'message' | 'disease';
+export type ModalType = 'message' | 'disease' | 'appointment';
 
 interface MenuItemProps {
   item: ModalType
@@ -20,6 +20,10 @@ const menuItems: MenuItemProps[] = [{
   item: 'disease',
   Icon: FileAddOutlined as unknown as () => ReactElement,
   permissions: [Permissions.CAN_CREATE_DISEASES],
+}, {
+  item: 'appointment',
+  Icon: CalendarOutlined as unknown as () => ReactElement,
+  permissions: [Permissions.CAN_CREATE_APPOINTMENTS],
 }];
 
 const FloatingMenuItem = (

@@ -5,3 +5,4 @@ export { default as useParticipantsStore } from './participantsStore';
 export { default as useUserStore } from './userStore';
 export { default as useInvitationsStore } from './invitationsStore';
 export { default as useWidgetsDataStore } from './widgetsDataStore';
+export { default as useAppointmentsStore } from './appointmentsStore';

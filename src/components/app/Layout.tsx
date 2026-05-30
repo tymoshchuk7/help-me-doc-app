@@ -6,6 +6,7 @@ import Sidebar from './Sidebar';
 import FloatingMenu, { ModalType } from './FloatingMenu';
 import NewMessageModal from './NewChatModal';
 import NewDiseaseModal from './NewDiseaseModal';
+import NewAppointmentModal from './NewAppointmentModal';
 
 const { Content } = Layout;
 
@@ -19,6 +20,7 @@ const AppLayout = (): ReactElement => {
     <Layout className="min-height-100vh">
       <NewMessageModal open={modalVisibility === 'message'} closeModal={hideModal} />
       <NewDiseaseModal open={modalVisibility === 'disease'} closeModal={hideModal} />
+      <NewAppointmentModal open={modalVisibility === 'appointment'} closeModal={hideModal} />
       <Header />
       <FloatingMenu onClick={(item) => setModalVisibility(item)} />
       <Layout>

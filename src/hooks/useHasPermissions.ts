@@ -1,7 +1,7 @@
 import { useUserStore } from '../stores';
 import { Permissions, ROLE_PERMISSIONS } from '../constants';
 
-export default function useHasPermissions(permissions: Permissions[]): boolean {
+export default function useHasPermissions(permissions: Permissions[], rule: 'all' | 'or' = 'all'): boolean {
   const { me } = useUserStore();
   const role = me?.participant?.role;
 
@@ -9,5 +9,5 @@ export default function useHasPermissions(permissions: Permissions[]): boolean {
     return false;
   }
 
-  return permissions.every((permission) => ROLE_PERMISSIONS[role].has(permission));
+  return rule === 'all' ? permissions.every((permission) => ROLE_PERMISSIONS[role].has(permission)) : permissions.some((permission) => ROLE_PERMISSIONS[role].has(permission));
 }

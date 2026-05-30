@@ -142,7 +142,7 @@ const TableWidget = (): ReactElement => {
             <DataType>
             // @ts-ignore
             columns={tableColumns}
-            dataSource={data?.data?.tableWidgetData || []}
+            dataSource={data?.data?.data || []}
           />
         )}
       </Resolve>

@@ -1,3 +1,4 @@
+export { appointmentValidator } from './appointmentValidator';
 export { userValidator } from './userValidator';
 export { diseaseValidator } from './diseaseValidator';
 export { tenantValidator } from './tenantValidator';

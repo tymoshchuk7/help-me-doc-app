@@ -2,12 +2,6 @@ import { TRole } from './types';
 
 export const AUTH_TOKEN_KEY = 'authToken';
 
-export const DISEASES_STATUSES = [
-  { value: 'active', label: 'Active' },
-  { value: 'resolved', label: 'Resolved' },
-  { value: 'chronic', label: 'Chronic' },
-];
-
 export enum AppRouteNames {
   authCallback = '/authCallback',
   login = '/login',
@@ -19,6 +13,7 @@ export enum AppRouteNames {
   chats = '/chats',
   chat = '/chats/:id',
   disease = '/disease/:id',
+  appointment = '/appointment/:id',
 }
 
 export enum Permissions {

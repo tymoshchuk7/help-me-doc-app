@@ -1,4 +1,5 @@
 import { ReactElement } from 'react';
+import { Outlet } from 'react-router-dom';
 import { useHasPermissions } from '../../hooks';
 import { useUserStore } from '../../stores';
 import { Permissions } from '../../constants';
@@ -23,6 +24,7 @@ const DashboardPage = (): ReactElement => {
         </div>
       )}
       <TableWidget />
+      <Outlet />
       {canSeeCalendar && <CalendarWidget />}
     </>
   );

@@ -1,5 +1,5 @@
 import { Rule } from 'antd/lib/form';
-import { CreateAppointmentDTO } from '../types';
+import { CreateAppointmentDTO, UpdateAppointmentDTO } from '../types';
 
 export const appointmentValidator: Record<keyof CreateAppointmentDTO, Rule[]> = {
   patient_participant_id: [{
@@ -9,5 +9,12 @@ export const appointmentValidator: Record<keyof CreateAppointmentDTO, Rule[]> = 
   scheduled_at: [{
     required: true,
     message: 'Please select a starting date.',
+  }],
+} as const;
+
+export const updateAppointmentValidator: Record<keyof UpdateAppointmentDTO, Rule[]> = {
+  status: [{
+    enum: ['completed', 'cancelled'],
+    message: 'Please select one of the following statuses.',
   }],
 } as const;

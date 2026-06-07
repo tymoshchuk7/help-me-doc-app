@@ -45,6 +45,13 @@ const useDiseasesStore = create<DiseasesState>((setState, getState) => ({
     body: { data: { ...disease } },
     method: 'post',
     successToastMessage: 'Disease has been created',
+    onSuccess: (data) => {
+      const state = getState();
+
+      return setState({
+        diseases: mergeDataIntoStore(state.diseases, data.disease),
+      });
+    },
   }),
   updateDisease: async (
     id: string,
@@ -54,6 +61,13 @@ const useDiseasesStore = create<DiseasesState>((setState, getState) => ({
     body: { data: { ...disease } },
     method: 'put',
     successToastMessage: 'Disease has been updated',
+    onSuccess: (data) => {
+      const state = getState();
+
+      return setState({
+        diseases: mergeDataIntoStore(state.diseases, data.disease),
+      });
+    },
   }),
 }));
 

@@ -3,11 +3,14 @@ import {
   Modal, Form, Skeleton,
   Select as AntdSelect, Button, FormProps,
 } from 'antd';
+import { upperCase } from 'lodash';
 import { useDispatchPromise } from '../../hooks';
 import { useDiseasesStore, useParticipantsStore } from '../../stores';
 import { diseaseValidator } from '../../validators';
-import { DISEASES_STATUSES } from '../../constants';
-import { ITenantParticipant, IUser, CreateDiseaseDTO } from '../../types';
+import {
+  ITenantParticipant, IUser, CreateDiseaseDTO,
+  TenantDiseaseStatus,
+} from '../../types';
 import Resolve from '../helpers/Resolve';
 import Select from '../controls/Select';
 import TextArea from '../controls/TextArea';
@@ -77,9 +80,9 @@ const ModalBody = ({ closeModal }: { closeModal: () => void }): ReactElement => 
             rules={diseaseValidator.status}
             label="Status"
           >
-            {DISEASES_STATUSES.map((option) => (
-              <Option key={`disease-status-${option.value}`} value={option.value}>
-                {option.label}
+            {Object.values(TenantDiseaseStatus).map((status) => (
+              <Option key={`disease-status-${status}`} value={status}>
+                {upperCase(status)}
               </Option>
             ))}
           </Select>

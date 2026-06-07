@@ -6,31 +6,31 @@ import {
 } from 'antd';
 import { upperCase } from 'lodash';
 import { useDispatchPromise } from '../hooks';
-import { useDiseasesStore, useUserStore } from '../stores';
-import { diseaseValidator } from '../validators';
-import { UpdateDiseaseDTO, TenantDiseaseStatus } from '../types';
-import { Select, Input, TextArea, Resolve } from '../components';
+import { useAppointmentsStore, useUserStore } from '../stores';
+import { updateAppointmentValidator } from '../validators';
+import { UpdateAppointmentDTO, AppointmentStatus } from '../types';
+import { Select, Resolve } from '../components';
 
 const { Option } = AntdSelect;
 
-const EditDiseaseForm = (): ReactElement => {
+const EditAppointmentPage = (): ReactElement => {
   const { id } = useParams<{ id: string }>();
-  const { diseases, updateDisease } = useDiseasesStore();
+  const { appointments, updateAppointment } = useAppointmentsStore();
   const { me } = useUserStore();
   const [loading, setLoading] = useState(false);
   const [, setError] = useState<null | undefined | Error>(null);
-  const [form] = Form.useForm<UpdateDiseaseDTO>();
+  const [form] = Form.useForm<UpdateAppointmentDTO>();
 
-  const disease = useMemo(() => diseases[id!], [diseases, id]);
+  const appointment = useMemo(() => appointments[id!], [appointments, id]);
   const formDisabled = useMemo(
-    () => disease.doctor_participant_id !== me?.participant?.id,
-    [disease, me],
+    () => appointment.doctor_participant_id !== me?.participant?.id,
+    [appointment, me],
   );
 
-  const onSubmit: FormProps<UpdateDiseaseDTO>['onFinish'] = async (values) => {
+  const onSubmit: FormProps<UpdateAppointmentDTO>['onFinish'] = async (values) => {
     try {
       setLoading(true);
-      await updateDisease(id!, values);
+      await updateAppointment(id!, values);
     } catch (e) {
       setError(e as Error);
     }
@@ -44,39 +44,21 @@ const EditDiseaseForm = (): ReactElement => {
         onFinish={onSubmit}
         form={form}
         layout="vertical"
-        initialValues={{ ...disease }}
+        initialValues={{ ...appointment }}
         style={{ maxWidth: '700px', flexGrow: 1 }}
       >
-        <Input
-          label="Name"
-          name="name"
-          placeholder="Disease name"
-          rules={diseaseValidator.name}
-        />
         <Select
           placeholder="Select a status bellow"
           name="status"
-          rules={diseaseValidator.status}
+          rules={updateAppointmentValidator.status}
           label="Status"
         >
-          {Object.values(TenantDiseaseStatus).map((status) => (
+          {Object.values(AppointmentStatus).map((status) => (
             <Option key={`disease-status-${status}`} value={status}>
               {upperCase(status)}
             </Option>
           ))}
         </Select>
-        <TextArea
-          label="Description"
-          rules={diseaseValidator.description}
-          name="description"
-          placeholder="Disease description"
-        />
-        <TextArea
-          label="Treatment"
-          rules={diseaseValidator.treatment}
-          name="treatment"
-          placeholder="Disease description"
-        />
         <div className="flex justify-end">
           {!formDisabled && (
             <Button htmlType="submit" disabled={loading}>
@@ -89,33 +71,34 @@ const EditDiseaseForm = (): ReactElement => {
   );
 };
 
-const DiseaseModal = (): ReactElement => {
+const AppointmentModal = (): ReactElement => {
   const navigate = useNavigate();
 
   return (
     <Modal
-      title={<div>Disease </div>}
+      title={<div>Appointment</div>}
       open
       onCancel={() => navigate('/')}
       okButtonProps={{ style: { display: 'none' } }}
       footer={<></>}
     >
-      <EditDiseaseForm />
+      <EditAppointmentPage />
     </Modal>
   );
 };
 
-const DiseasePageContainer = (): ReactElement => {
-  const { retrieveDisease } = useDiseasesStore();
+const AppointmentPageContainer = (): ReactElement => {
+  const { retrieveAppointment } = useAppointmentsStore();
   const { id } = useParams<{ id: string }>();
-  const retrieveDiseasePromise = useMemo(() => () => retrieveDisease(id!), [id, retrieveDisease]);
+  // eslint-disable-next-line max-len
+  const retrieveDiseasePromise = useMemo(() => () => retrieveAppointment(id!), [id, retrieveAppointment]);
   const loadDiseasesPromise = useDispatchPromise(retrieveDiseasePromise);
 
   return (
     <Resolve promises={[loadDiseasesPromise]}>
-      {() => <DiseaseModal />}
+      {() => <AppointmentModal />}
     </Resolve>
   );
 };
 
-export default DiseasePageContainer;
+export default AppointmentPageContainer;

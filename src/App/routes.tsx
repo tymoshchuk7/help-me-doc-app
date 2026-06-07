@@ -12,7 +12,7 @@ import { AppRouteNames, Permissions } from '../constants';
 import {
   AuthCallbackPage, ChangePasswordPage, DashboardPage,
   LoginPage, SignUpPage, CreateTenantPage, InvitationCallbackPage,
-  Page404, ChatsPage, ChatPage, DiseasePage,
+  Page404, ChatsPage, ChatPage, DiseasePage, AppointmentPage,
 } from '../pages';
 import { Loader, AppPageLayout } from '../components';
 import ErrorBoundary from './ErrorBoundary';
@@ -98,7 +98,29 @@ export const router = createBrowserRouter([
                 children: [
                   {
                     path: AppRouteNames.dashboard,
-                    Component: DashboardPage,
+                    element: <DashboardPage />,
+                    children: [
+                      {
+                        path: AppRouteNames.disease,
+                        element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_VIEW_DISEASES]} />,
+                        children: [
+                          {
+                            index: true,
+                            element: <DiseasePage />,
+                          },
+                        ],
+                      },
+                      {
+                        path: AppRouteNames.appointment,
+                        element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_VIEW_APPOINTMENTS]} />,
+                        children: [
+                          {
+                            index: true,
+                            element: <AppointmentPage />,
+                          },
+                        ],
+                      },
+                    ],
                   },
                   {
                     path: AppRouteNames.chats,
@@ -117,16 +139,6 @@ export const router = createBrowserRouter([
                       {
                         index: true,
                         element: <ChatPage />,
-                      },
-                    ],
-                  },
-                  {
-                    path: AppRouteNames.disease,
-                    element: <RestrictedPermissionsRoute permissions={[Permissions.CAN_VIEW_DISEASES]} />,
-                    children: [
-                      {
-                        index: true,
-                        element: <DiseasePage />,
                       },
                     ],
                   },

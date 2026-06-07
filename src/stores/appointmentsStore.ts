@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import { apiRequest, mergeDataIntoStore } from './helpers';
 import {
   APIResult, ITenantAppointment, CreateAppointmentDTO,
-  UpdateDiseaseDTO,
+  UpdateAppointmentDTO,
 } from '../types';
 
 interface AppointmentsState {
@@ -14,7 +14,7 @@ interface AppointmentsState {
   ) => Promise<APIResult<{ appointment: ITenantAppointment }>>,
   updateAppointment: (
     id: string,
-    appointment: UpdateDiseaseDTO,
+    appointment: UpdateAppointmentDTO,
   ) => Promise<APIResult<{ appointment: ITenantAppointment }>>
 }
 
@@ -38,7 +38,7 @@ const useAppointmentsStore = create<AppointmentsState>((setState, getState) => (
       const state = getState();
 
       return setState({
-        appointments: mergeDataIntoStore(state.appointments, [data.appointment]),
+        appointments: mergeDataIntoStore(state.appointments, data.appointment),
       });
     },
   }),
@@ -49,15 +49,29 @@ const useAppointmentsStore = create<AppointmentsState>((setState, getState) => (
     body: { data: { ...appointment } },
     method: 'post',
     successToastMessage: 'Appointment has been scheduled',
+    onSuccess: (data) => {
+      const state = getState();
+
+      return setState({
+        appointments: mergeDataIntoStore(state.appointments, data.appointment),
+      });
+    },
   }),
   updateAppointment: async (
     id: string,
-    disease: UpdateDiseaseDTO,
+    disease: UpdateAppointmentDTO,
   ) => apiRequest<{ appointment: ITenantAppointment }>({
     path: `${endpoint}/${id}`,
     body: { data: { ...disease } },
     method: 'put',
     successToastMessage: 'Appointment has been updated',
+    onSuccess: (data) => {
+      const state = getState();
+
+      return setState({
+        appointments: mergeDataIntoStore(state.appointments, data.appointment),
+      });
+    },
   }),
 }));
 

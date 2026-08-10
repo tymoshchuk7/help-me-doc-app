@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import { ReactElement, useEffect } from 'react';
 import { CheckOutlined } from '@ant-design/icons';
 import { encryptionClient } from '../../helpers';
 import { IChatPartner, ITenantChat, ITenantMessage } from '../../types';
@@ -34,37 +34,22 @@ const OwnMessage = ({ message }: { message: ITenantMessage }): ReactElement => (
   </div>
 );
 
-const ReceivedMessage = ({ message }: { message: ITenantMessage }): ReactElement => {
-  const [asdf, setAsdf] = useState<any []>([]);
-
-  useEffect(() => {
-    const { attachments } = message;
-    console.log({
-      content: encryptionClient.decryptMessage(message.content),
-      attachments,
-      foo: !!asdf?.length,
-    });
-    setAsdf(attachments);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return (
-    <div className="flex justify-start" id={`chat-message-${message.id}`}>
-      <div>
-        <div className="flex mb-10">
-          {message.attachments?.map((attachment) => (
-            <ChatImage path={attachment.bucket_path} key={attachment.id} />
-          ))}
-        </div>
-        <div className="flex justify-start">
-          <div className="chat-message received-message">
-            {encryptionClient.decryptMessage(message.content)}
-          </div>
+const ReceivedMessage = ({ message }: { message: ITenantMessage }): ReactElement => (
+  <div className="flex justify-start" id={`chat-message-${message.id}`}>
+    <div>
+      <div className="flex mb-10">
+        {message.attachments?.map((attachment) => (
+          <ChatImage path={attachment.bucket_path} key={attachment.id} />
+        ))}
+      </div>
+      <div className="flex justify-start">
+        <div className="chat-message received-message">
+          {encryptionClient.decryptMessage(message.content)}
         </div>
       </div>
     </div>
-  );
-};
+  </div>
+);
 
 interface Props {
   chat: ITenantChat & IChatPartner,

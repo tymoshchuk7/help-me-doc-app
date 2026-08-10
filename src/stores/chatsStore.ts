@@ -3,7 +3,7 @@ import { apiRequest, mergeDataIntoStore } from './helpers';
 import { encryptionClient } from '../helpers';
 import {
   APIResult, ITenantParticipant, IUser, ITenantChat,
-  IChatPartner, ITenantMessage,
+  IChatPartner, ITenantMessage, IPreUpload,
 } from '../types';
 
 interface ChatsState {
@@ -22,6 +22,7 @@ interface ChatsState {
   markMessageAsRead: (id: string) => Promise<APIResult<{ messages: ITenantMessage[] }>>,
   lastMessages: Record<string, ITenantMessage>,
   chats: Record<string, ITenantChat & IChatPartner>,
+  preUploadMessageAttachment: (id: string) => Promise<APIResult<IPreUpload>>,
 }
 
 const endpoint = '/chats';
@@ -63,6 +64,11 @@ const useChatsStore = create<ChatsState>((set, getState) => ({
         lastMessages: result,
       });
     },
+  }),
+  preUploadMessageAttachment: (originalName: string) => apiRequest<IPreUpload>({
+    method: 'post',
+    path: `${endpoint}/pre-upload`,
+    body: { data: { originalName } },
   }),
 }));
 

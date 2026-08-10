@@ -3,9 +3,12 @@ import {
   useRef,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { Form, FormProps, Button, Typography } from 'antd';
+import axios from 'axios';
+import { Form, FormProps, Button, Typography, Space, Image, Spin } from 'antd';
+import { CloseOutlined, PaperClipOutlined } from '@ant-design/icons';
 import { useSocketIO } from '../../contexts';
 import { encryptionClient } from '../../helpers';
+import { useChatsStore } from '../../stores';
 import { messageValidator } from '../../validators';
 import { ITenantMessage, ITenantChat, IChatPartner } from '../../types';
 import { TextArea } from '../../components';
@@ -24,14 +27,55 @@ const getLastMessageId = (messages: ITenantMessage[]) => messages[messages.lengt
 
 const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
   const [form] = Form.useForm<{ content: string }>();
+  const { preUploadMessageAttachment } = useChatsStore();
   const messageContainerBottomRef = useRef<HTMLDivElement | null>(null);
   const messageContainerRef = useRef<HTMLDivElement | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
   const { id } = useParams<{ id: string }>();
   const { socketIO, sendChatMessage } = useSocketIO();
   const [messages, setMessages] = useState<Props['messages']>(_messages);
   const [lastMessageId, setLastMessageId] = useState<string | null>(getLastMessageId(messages));
+  const [uploading, setUploading] = useState(false);
+  const [pendingAttchments, setPendingAttchments] = useState<any[]>([]);
 
   const scrollToBottom = () => messageContainerBottomRef?.current?.scrollIntoView({ behavior: 'smooth' });
+
+  const uploadFile = async (file: File): Promise<any> => {
+    const { data } = await preUploadMessageAttachment(file.name);
+
+    if (!data?.uploadUrl) {
+      throw new Error('URL is missing');
+    }
+
+    try {
+      await axios.put(data.uploadUrl, file, {
+        headers: { 'Content-Type': file.type },
+      });
+    } catch (e) {
+      console.error(e);
+    }
+
+    return {
+      ...(data ?? {}),
+      previewUrl: URL.createObjectURL(file),
+    };
+  };
+
+  const uploadFiles = async (files: File[]): Promise<any> => {
+    setUploading(true);
+    try {
+      return Promise.all(files.map(uploadFile));
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files ?? []);
+    if (!files.length) return;
+    const uploaded = await uploadFiles(files);
+    setPendingAttchments((prev) => [...prev, ...uploaded]);
+  };
 
   useEffect(() => {
     socketIO?.on('RECEIVE_MESSAGE', (data) => {
@@ -73,8 +117,9 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
 
   const onSubmit: FormProps<{ content: string }>['onFinish'] = (values) => {
     const { content } = values;
-    sendChatMessage(id!, encryptionClient.encryptMessage(content));
+    sendChatMessage(id!, encryptionClient.encryptMessage(content), pendingAttchments);
     form.setFieldValue('content', '');
+    setPendingAttchments([]);
     scrollToBottom();
   };
 
@@ -98,8 +143,60 @@ const Chat = ({ messages: _messages, chat }: Props): ReactElement => {
             form={form}
             onFinish={onSubmit}
           >
+
+            {pendingAttchments.length > 0 && (
+              <Space wrap style={{ padding: '4px 0' }}>
+                {pendingAttchments.map((att) => (
+                  <div key={att.url} style={{ position: 'relative', display: 'inline-block' }}>
+                    <Image
+                      src={att.previewUrl}
+                      width={64}
+                      height={64}
+                      style={{ objectFit: 'cover', borderRadius: 6 }}
+                      preview={false}
+                    />
+                    <Button
+                      type="text"
+                      size="small"
+                      icon={<CloseOutlined />}
+                      // onClick={() => removeAttachment(att.fileKey)}
+                      style={{
+                        position: 'absolute',
+                        top: -6,
+                        right: -6,
+                        background: 'rgba(0,0,0,0.5)',
+                        color: '#fff',
+                        borderRadius: '50%',
+                        width: 18,
+                        height: 18,
+                        minWidth: 'unset',
+                        padding: 0,
+                        fontSize: 10,
+                      }}
+                    />
+                  </div>
+                ))}
+              </Space>
+            )}
             <TextArea name="content" rules={messageValidator.content} placeholder="Your message.." />
-            <Button htmlType="submit">Send</Button>
+            <div className="flex justify-end">
+              <div className="mr-20">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  multiple
+                  style={{ display: 'none' }}
+                  onChange={handleFileChange}
+                />
+                <Button
+                  icon={uploading ? <Spin size="small" /> : <PaperClipOutlined />}
+                  disabled={uploading}
+                  onClick={() => fileInputRef.current?.click()}
+                />
+              </div>
+              <Button htmlType="submit">Send</Button>
+            </div>
           </Form>
         </div>
       </div>

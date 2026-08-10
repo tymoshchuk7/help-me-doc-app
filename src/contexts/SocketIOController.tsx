@@ -13,7 +13,7 @@ interface ISocketIOContext {
   socketIO: Socket | null,
   enterChatSocketIORoom: (chatId: string) => void,
   leaveChatSocketIORoom: (chatId: string) => void,
-  sendChatMessage: (chatId: string, content: string) => void,
+  sendChatMessage: (chatId: string, content: string, attachments: any[]) => void,
   ready: boolean,
 }
 
@@ -82,12 +82,13 @@ export const SocketIOProvider = (): ReactElement => {
 
   const enterChatSocketIORoom = (chatId: string) => socketIO?.emit('ENTER_CHAT_ROOM', chatId);
   const leaveChatSocketIORoom = (chatId: string) => socketIO?.emit('LEAVE_CHAT_ROOM', chatId);
-  const sendChatMessage = (chatId: string, content: string) => {
+  const sendChatMessage = (chatId: string, content: string, attachments: any[]) => {
     if (me?.participant?.id) {
       socketIO?.emit('CHAT_MESSAGE', JSON.stringify({
         participantId: me.participant.id,
         chatId,
         content,
+        attachments,
       }));
     }
   };

@@ -54,6 +54,18 @@ export interface IChatPartner {
   chat_partner_avatar: string | null,
 }
 
+export interface IPreUpload {
+  uploadUrl: string,
+  originalName: string,
+  fileKey: string,
+}
+
+export interface ITenantMedia {
+  id: string,
+  message_id: string,
+  bucket_path: string,
+}
+
 export interface ITenantMessage {
   id: string,
   chat_id: string,
@@ -63,6 +75,7 @@ export interface ITenantMessage {
   participant_id: string
   user_id: string,
   is_read: boolean,
+  attachments: ITenantMedia[]
 }
 
 export enum TenantDiseaseStatus {

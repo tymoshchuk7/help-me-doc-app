@@ -1,4 +1,5 @@
 export { default as useAppStore } from './appStore';
+export { default as useMiscStore } from './misc';
 export { default as useChatsStore } from './chatsStore';
 export { default as useDiseasesStore } from './diseasesStore';
 export { default as useParticipantsStore } from './participantsStore';

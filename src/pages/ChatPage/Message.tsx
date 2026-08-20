@@ -3,29 +3,50 @@ import { CheckOutlined } from '@ant-design/icons';
 import { encryptionClient } from '../../helpers';
 import { IChatPartner, ITenantChat, ITenantMessage } from '../../types';
 import { useChatsStore } from '../../stores';
+import ChatImage from './ChatImage';
 
 const OwnMessage = ({ message }: { message: ITenantMessage }): ReactElement => (
   <div className="flex justify-end position-relative" id={`chat-message-${message.id}`}>
-    <div className="chat-message sent-message">
-      {encryptionClient.decryptMessage(message.content)}
-      <CheckOutlined
-        className="d-block position-absolute message-checked"
-        style={{ right: 8 }}
-      />
-      {message.is_read && (
-        <CheckOutlined
-          className="d-block position-absolute message-checked"
-          style={{ right: 5 }}
-        />
+    <div>
+      {!!message.attachments?.length && (
+        <div className="flex mb-10">
+          {message.attachments.map((attachment) => (
+            <ChatImage path={attachment.bucket_path} key={attachment.id} />
+          ))}
+        </div>
       )}
+      <div className="flex justify-end position-relative">
+        <div className="chat-message sent-message">
+          {encryptionClient.decryptMessage(message.content)}
+          <CheckOutlined
+            className="d-block position-absolute message-checked"
+            style={{ right: 8 }}
+          />
+          {message.is_read && (
+            <CheckOutlined
+              className="d-block position-absolute message-checked"
+              style={{ right: 5 }}
+            />
+          )}
+        </div>
+      </div>
     </div>
   </div>
 );
 
 const ReceivedMessage = ({ message }: { message: ITenantMessage }): ReactElement => (
   <div className="flex justify-start" id={`chat-message-${message.id}`}>
-    <div className="chat-message received-message">
-      {encryptionClient.decryptMessage(message.content)}
+    <div>
+      <div className="flex mb-10">
+        {message.attachments?.map((attachment) => (
+          <ChatImage path={attachment.bucket_path} key={attachment.id} />
+        ))}
+      </div>
+      <div className="flex justify-start">
+        <div className="chat-message received-message">
+          {encryptionClient.decryptMessage(message.content)}
+        </div>
+      </div>
     </div>
   </div>
 );
